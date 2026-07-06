@@ -191,6 +191,7 @@ async function main() {
   const top = args.top ? parseInt(args.top, 10) : 8;
   const threshold = args.threshold ? parseFloat(args.threshold) : 4.0;
   const applicationsPath = args.applications || 'data/applications.md';
+  const reportsDir = args.reports || 'reports';
   const outRoot = args.out || 'output/weekly';
 
   if (!existsSync(applicationsPath)) {
@@ -208,12 +209,16 @@ async function main() {
     .map(l => parseTrackerRow(l, colmap))
     .filter(Boolean);
 
-  // Load report text for each row's report path (best-effort; missing file = empty).
+  // Load report text for each row. Try the report path verbatim first (handles
+  // absolute paths and cwd-relative paths like `reports/001.md`), then fall back
+  // to <reportsDir>/<basename> so --reports can redirect a non-default reports dir.
+  // Key is always the verbatim `r.report` string (buildSummary looks it up by that).
   const reportTexts = {};
   for (const r of dataRows) {
     if (!r.report) continue;
-    const rp = resolve(r.report);
-    if (existsSync(rp)) reportTexts[r.report] = readFileSync(rp, 'utf8');
+    const candidates = [resolve(r.report), resolve(reportsDir, r.report)];
+    const rp = candidates.find(p => existsSync(p));
+    if (rp) reportTexts[r.report] = readFileSync(rp, 'utf8');
   }
 
   const summary = buildSummary(dataRows, reportTexts, { week, threshold, top });
