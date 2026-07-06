@@ -131,3 +131,98 @@ function weekRange(week) {
   const end = start + 7 * dayMs - 1;          // through end of Sunday
   return { start, end };
 }
+
+// ── CLI wrapper ────────────────────────────────────────────────────
+// Reads data/applications.md via tracker-parse.mjs (DRY — no re-parse),
+// reads each report, calls buildSummary, writes output/weekly/{week}/SUMMARY.md.
+
+import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'fs';
+import { resolve } from 'path';
+import { fileURLToPath } from 'url';
+import { resolveColumns, parseTrackerRow } from './tracker-parse.mjs';
+
+const __filename = fileURLToPath(import.meta.url);
+
+function usage() {
+  console.log(`usage: node weekly-packet.mjs [--week YYYY-MM-DD] [--top N] [--threshold F] [--applications PATH] [--reports DIR] [--out DIR]
+
+  --week        a date inside the target week (default: today)
+  --top         max qualified rows in table (default 8)
+  --threshold   min score to qualify (default 4.0)
+  --applications  tracker path (default data/applications.md)
+  --reports     reports dir (default reports)
+  --out         output root (default output/weekly)`);
+}
+
+function todayYMD() {
+  // ponytail: derive from system clock for CLI default; tests pass --week explicitly.
+  return new Date().toISOString().slice(0, 10);
+}
+
+function parseFlags(argv) {
+  const out = {};
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === '--help' || a === '-h') { out.help = true; continue; }
+    if (a.startsWith('--')) {
+      const key = a.slice(2);
+      out[key] = argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[++i] : true;
+    }
+  }
+  return out;
+}
+
+// Mon-start week (matches buildSummary's weekRange). Output folder named by the
+// Monday of that week, YYYYMMDD, so reruns of the same week are idempotent.
+function weekFolderTag(week) {
+  const dayMs = 86_400_000;
+  const ms = Date.parse(week + 'T00:00:00Z');
+  if (Number.isNaN(ms)) return week.replace(/[^0-9a-z]/gi, '-');
+  const dow = new Date(ms).getUTCDay(); // 0=Sun..6=Sat
+  const mondayMs = ms - ((dow + 6) % 7) * dayMs;
+  return new Date(mondayMs).toISOString().slice(0, 10).replace(/-/g, '');
+}
+
+async function main() {
+  const args = parseFlags(process.argv.slice(2));
+  if (args.help) { usage(); return; }
+
+  const week = args.week || todayYMD();
+  const top = args.top ? parseInt(args.top, 10) : 8;
+  const threshold = args.threshold ? parseFloat(args.threshold) : 4.0;
+  const applicationsPath = args.applications || 'data/applications.md';
+  const outRoot = args.out || 'output/weekly';
+
+  if (!existsSync(applicationsPath)) {
+    console.error(`weekly-packet: ${applicationsPath} not found — nothing to summarize yet.`);
+    process.exit(2);
+  }
+
+  const raw = readFileSync(applicationsPath, 'utf8').split('\n');
+  const colmap = resolveColumns(raw);
+  // Data rows: lines starting with '|', excluding separator rows and the header row.
+  const dataRows = raw
+    .map(l => l.trim())
+    .filter(l => l.startsWith('|') && !/\|\s*[-:]+\s*\|/.test(l))
+    .filter((l, i, arr) => i > 0 || !/^\|\s*#?\s*num\b/i.test(l))
+    .map(l => parseTrackerRow(l, colmap))
+    .filter(Boolean);
+
+  // Load report text for each row's report path (best-effort; missing file = empty).
+  const reportTexts = {};
+  for (const r of dataRows) {
+    if (!r.report) continue;
+    const rp = resolve(r.report);
+    if (existsSync(rp)) reportTexts[r.report] = readFileSync(rp, 'utf8');
+  }
+
+  const summary = buildSummary(dataRows, reportTexts, { week, threshold, top });
+
+  const outDir = resolve(outRoot, weekFolderTag(week));
+  mkdirSync(outDir, { recursive: true });
+  const outPath = resolve(outDir, 'SUMMARY.md');
+  writeFileSync(outPath, summary);
+  console.log(`weekly-packet: wrote ${outPath} (${dataRows.length} tracker rows scanned)`);
+}
+
+if (process.argv[1] === __filename) main();
