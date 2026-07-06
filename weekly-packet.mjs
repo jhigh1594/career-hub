@@ -6,8 +6,12 @@
  *
  * @param {Array<object>} rows - output of tracker-parse.mjs parseTrackerRow().
  * @param {Record<string,string>} reportTexts - report path -> report text (for rationale).
+ *   Keys must match `row.report` verbatim from `parseTrackerRow()` — the CLI wrapper
+ *   indexes this map by that exact string, so a key/path mismatch silently falls back
+ *   to "see report" rather than crashing.
  * @param {{week: string, threshold?: number, top?: number}} opts
- *   - week: a YYYY-MM-DD inside the target week (week = that day's calendar week, Sun-start).
+ *   - week: a YYYY-MM-DD inside the target week (Mon-start; a Sunday resolves to the
+ *     Mon..Sun window just ended). Bad/missing week falls back to "all time" + a bare header.
  *   - threshold: min score to count as "qualified" (default 4.0).
  *   - top: cap qualified rows shown (default 8).
  * @returns {string} SUMMARY markdown.
@@ -15,6 +19,7 @@
 export function buildSummary(rows, reportTexts, opts) {
   const threshold = opts.threshold ?? 4.0;
   const top = opts.top ?? 8;
+  const BELOW_BAR_CAP = 5; // ponytail: separate smaller cap for near-misses; name if scaling needed
 
   const { start, end } = weekRange(opts.week);
 
@@ -66,7 +71,7 @@ export function buildSummary(rows, reportTexts, opts) {
   if (nextBest.length) {
     lines.push('### Below bar (review at your discretion)');
     lines.push('');
-    nextBest.slice(0, 5).forEach((r, i) => {
+    nextBest.slice(0, BELOW_BAR_CAP).forEach((r, i) => {
       lines.push(`- ${r.score} — **${r.company}** / ${r.role} — ${r.report || ''}`);
     });
     lines.push('');
