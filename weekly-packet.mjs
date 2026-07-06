@@ -33,10 +33,10 @@ export function buildSummary(rows, reportTexts, opts) {
   const nextBest = scored.filter(r => r._score < threshold);
 
   const lines = [];
-  lines.push(`# Weekly Packet — week of ${fmtISO(start)}`);
-  lines.push('');
 
   if (qualified.length === 0) {
+    lines.push(headerLine(start));
+    lines.push('');
     lines.push(`> No roles met the ${threshold}/5 bar this week.`);
     if (nextBest.length) {
       lines.push('> Below-bar roles worth a look:');
@@ -51,7 +51,8 @@ export function buildSummary(rows, reportTexts, opts) {
     return lines.join('\n');
   }
 
-  lines.push(`# Weekly Packet — week of ${fmtISO(start)}`);
+  lines.push(headerLine(start));
+  lines.push('');
   lines.push(`Qualified (≥ ${threshold}/5): ${qualified.length} role(s). Ranked by score.`);
   lines.push('');
   lines.push('| # | Score | Company | Role | Why it fits | Report |');
@@ -101,6 +102,13 @@ function parseDate(s) {
 /** epoch ms -> YYYY-MM-DD (UTC). */
 function fmtISO(ms) {
   return new Date(ms).toISOString().slice(0, 10);
+}
+
+/** Header line: bare when the week is unparseable, dated otherwise. */
+function headerLine(start) {
+  return Number.isFinite(start)
+    ? `# Weekly Packet — week of ${fmtISO(start)}`
+    : `# Weekly Packet`;
 }
 
 /** Mon-start calendar week containing `week` (YYYY-MM-DD). Returns {start,end} epoch ms.

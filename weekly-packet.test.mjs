@@ -54,5 +54,13 @@ const out3 = buildSummary(many, {}, { week, threshold: 4.0, top: 5 });
 const tableRows = out3.split('\n').filter(l => l.startsWith('|') && /Co\d/.test(l)).length;
 ok(tableRows === 5, `top N cap: 5 rows in table (got ${tableRows})`);
 
+// Case 4: bad/missing week must not crash (graceful bare header).
+let badWeekOk = true;
+try {
+  const out4 = buildSummary(rows, reportTexts, { threshold: 4.0, top: 8 });
+  badWeekOk = typeof out4 === 'string' && /^# Weekly Packet\s*$/m.test(out4.split('\n')[0]);
+} catch { badWeekOk = false; }
+ok(badWeekOk, 'missing --week does not crash, emits bare header');
+
 console.log(`\n${failed === 0 ? 'ALL PASS' : 'FAILURES'} — ${passed} passed, ${failed} failed`);
 process.exit(failed === 0 ? 0 : 1);
