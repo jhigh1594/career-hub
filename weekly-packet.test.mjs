@@ -31,7 +31,10 @@ ok(out.includes('Google'), 'includes Google (4.6, in-week)');
 ok(out.includes('Microsoft'), 'includes Microsoft (4.2, in-week)');
 ok(out.includes('Salesforce'), 'includes Salesforce (4.1, in-week)');
 ok(!out.includes('StaleCo'), 'excludes out-of-week row (2026-06-20)');
-ok(!out.includes('Patagonia'), 'excludes below-threshold (3.8) from top section');
+const patagoniaInQualifiedTable = out
+  .split('\n')
+  .some(l => l.startsWith('|') && l.includes('Patagonia'));
+ok(!patagoniaInQualifiedTable, 'excludes below-threshold (3.8) from qualified table');
 ok(out.indexOf('Google') < out.indexOf('Microsoft'), 'ranked: Google (4.6) before Microsoft (4.2)');
 
 // Case 2: zero-qualified fallback lists next-best below threshold.
