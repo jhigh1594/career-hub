@@ -12,7 +12,7 @@ const rows = [
   { num: '1', date: '2026-07-01', company: 'Google',   role: 'Sustainability Lead',     score: '4.6/5', status: 'evaluated', report: 'reports/001-google-2026-07-01.md', notes: '' },
   { num: '2', date: '2026-07-02', company: 'Microsoft', role: 'Climate Program Manager', score: '4.2/5', status: 'evaluated', report: 'reports/002-microsoft-2026-07-02.md', notes: '' },
   { num: '3', date: '2026-07-03', company: 'Patagonia', role: 'ESG Strategy',           score: '3.8/5', status: 'evaluated', report: 'reports/003-patagonia-2026-07-03.md', notes: '' },
-  { num: '4', date: '2026-07-04', company: 'Salesforce', role: 'Philanthropy Lead',     score: '4.1/5', status: 'evaluated', report: 'reports/004-salesforce-2026-07-04.md', notes: '' },
+  { num: '4', date: '2026-07-04', company: 'Salesforce', role: 'Philanthropy Lead',     score: '**4.1/5**', status: 'evaluated', report: 'reports/004-salesforce-2026-07-04.md', notes: '' }, // bold score (tracker convention)
   { num: '5', date: '2026-06-20', company: 'StaleCo',   role: 'CSR Manager',            score: '4.5/5', status: 'evaluated', report: 'reports/005-staleco-2026-06-20.md', notes: '' }, // out of week
 ];
 

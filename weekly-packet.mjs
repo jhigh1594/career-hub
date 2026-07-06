@@ -48,7 +48,7 @@ export function buildSummary(rows, reportTexts, opts) {
       lines.push('');
       lines.push('| # | Score | Company | Role | Report |');
       lines.push('|---|-------|---------|-------|--------|');
-      nextBest.slice(0, top).forEach((r, i) => {
+      nextBest.slice(0, BELOW_BAR_CAP).forEach((r, i) => {
         lines.push(`| ${i + 1} | ${r.score} | ${r.company} | ${r.role} | ${r.report || '—'} |`);
       });
       lines.push('');
@@ -90,10 +90,11 @@ function fitOneLiner(reportText, row) {
   return (line || `see ${row.report || 'report'}`).replace(/\|/g, '\\|').slice(0, 140);
 }
 
-/** Parse "N.N/5" -> number, or null. */
+/** Parse "N.N/5" -> number, or null. Strips ** bold markers — the tracker
+ *  writes bold scores (`**4.6/5**`), matching looksLikeScoreCell's convention. */
 function parseScore(cell) {
   if (typeof cell !== 'string') return null;
-  const m = cell.match(/^(\d+(?:\.\d+)?)\/5$/);
+  const m = cell.replace(/\*\*/g, '').trim().match(/^(\d+(?:\.\d+)?)\/5$/);
   return m ? parseFloat(m[1]) : null;
 }
 
