@@ -201,17 +201,17 @@ async function main() {
 
   const raw = readFileSync(applicationsPath, 'utf8').split('\n');
   const colmap = resolveColumns(raw);
-  // Data rows: lines starting with '|', excluding separator rows and the header row.
+  // Data rows: lines starting with '|', excluding separator rows. The header row
+  // is dropped implicitly — parseTrackerRow returns null when num is non-numeric.
   const dataRows = raw
     .map(l => l.trim())
     .filter(l => l.startsWith('|') && !/\|\s*[-:]+\s*\|/.test(l))
-    .filter((l, i, arr) => i > 0 || !/^\|\s*#?\s*num\b/i.test(l))
     .map(l => parseTrackerRow(l, colmap))
     .filter(Boolean);
 
   // Load report text for each row. Try the report path verbatim first (handles
-  // absolute paths and cwd-relative paths like `reports/001.md`), then fall back
-  // to <reportsDir>/<basename> so --reports can redirect a non-default reports dir.
+  // absolute paths and cwd-relative paths like `reports/001.md`), then try
+  // <reportsDir>/<r.report verbatim> so --reports can redirect a non-default dir.
   // Key is always the verbatim `r.report` string (buildSummary looks it up by that).
   const reportTexts = {};
   for (const r of dataRows) {
