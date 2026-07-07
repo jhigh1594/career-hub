@@ -44,7 +44,7 @@ export function DecisionCard({ app }: { app: Application }) {
           <span
             className={cn(
               "shrink-0 rounded-md px-2 py-0.5 text-xs font-semibold tabular-nums",
-              tone === "good" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : tone === "warn" ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-surface-hover text-muted",
+              tone === "good" ? "bg-sage/30 text-moss" : tone === "warn" ? "bg-ochre/20 text-moss" : "bg-surface-hover text-muted",
             )}
           >
             {app.score}

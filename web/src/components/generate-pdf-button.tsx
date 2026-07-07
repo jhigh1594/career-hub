@@ -34,7 +34,7 @@ export function GeneratePdfButton({ n, company, pdfReady }: { n: string; company
           href={`/api/cv-pdf?company=${encodeURIComponent(company)}`}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-500/15 dark:text-emerald-400"
+          className="inline-flex items-center gap-1.5 rounded-full border border-moss/30 bg-moss/10 px-3 py-1 text-xs font-medium text-moss transition-colors hover:bg-moss/15"
         >
           <FileText className="size-3.5" /> View tailored CV
         </a>

@@ -256,7 +256,7 @@ function InboxEmpty({ count, filtered }: { count: number; filtered: boolean }) {
     );
   }
   return (
-    <div className="dot-bg mt-4 overflow-hidden rounded-2xl border border-border bg-surface/50 bg-origin-border bg-gradient-to-tr from-brand/10 via-transparent to-transparent shadow-lg">
+    <div className="dot-bg mt-4 overflow-hidden rounded-[20px] border border-hairline bg-surface/60 shadow-lg">
       <div className="flex items-center gap-2 border-b border-foreground/10 px-5 py-3">
         <span className="size-2.5 rounded-full bg-foreground/15" aria-hidden="true" />
         <span className="size-2.5 rounded-full bg-foreground/15" aria-hidden="true" />

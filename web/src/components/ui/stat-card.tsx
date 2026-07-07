@@ -1,16 +1,12 @@
 import Link from "next/link";
 import { instrumentSerif } from "@/lib/fonts";
 import { cn } from "@/lib/cn";
+import { PetalSeal } from "@/components/petal-seal";
 
-// Stat tile with the home's resting gradient corner + lit edge + shadow. The
-// number is serif ONLY when `featured` (≤1 serif number per route); the rest
-// use Inter tabular-nums so numerals never form a serif wall.
-const CORNERS = {
-  br: "bg-gradient-to-br",
-  bl: "bg-gradient-to-bl",
-  tr: "bg-gradient-to-tr",
-} as const;
-
+// Verdara stat tile. `featured` renders a moss color-block with an oversized
+// Fraunces number + faint Petal-Seal watermark (Verdara stat-band pattern).
+// Default renders a hairline parchment card. Gradients are gone (Verdara
+// forbids them); depth comes from solid color + hairline.
 export function StatCard({
   href,
   icon: Icon,
@@ -18,7 +14,6 @@ export function StatCard({
   label,
   hint,
   featured = false,
-  corner = "br",
 }: {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
@@ -26,29 +21,31 @@ export function StatCard({
   label: string;
   hint: string;
   featured?: boolean;
-  corner?: keyof typeof CORNERS;
 }) {
   return (
     <Link
       href={href}
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-border bg-surface/50 bg-origin-border p-5 shadow-lg transition-colors",
-        CORNERS[corner],
-        "from-brand/10 via-transparent to-transparent",
-        "hover:border-brand/40 hover:bg-surface-hover group-hover:from-brand/20",
+        "group relative block overflow-hidden rounded-[20px] p-5 transition-colors",
+        featured
+          ? "bg-moss text-parchment"
+          : "border border-hairline bg-surface text-foreground hover:border-moss/40 hover:bg-surface-hover",
       )}
     >
-      <Icon className="size-5 text-brand" />
+      {featured && (
+        <PetalSeal size="watermark" className="absolute -bottom-12 -right-12 h-64 w-64 text-parchment opacity-[0.10]" />
+      )}
+      <Icon className={cn("relative size-5", featured ? "text-ochre" : "text-moss")} />
       <div
         className={cn(
-          "mt-3 text-4xl leading-none tabular-nums",
+          "relative mt-3 text-4xl leading-none tabular-nums",
           featured ? instrumentSerif.className : "font-semibold",
         )}
       >
         {value}
       </div>
-      <div className="mt-2 text-sm text-foreground">{label}</div>
-      <div className="text-xs text-faint">{hint}</div>
+      <div className="relative mt-2 text-sm">{label}</div>
+      <div className={cn("relative text-xs", featured ? "text-parchment/70" : "text-faint")}>{hint}</div>
     </Link>
   );
 }

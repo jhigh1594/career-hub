@@ -16,7 +16,7 @@ export function FirstRunHome() {
         {/* Readability scrim between the animated glow (z-0) and the copy (z-10):
             the glow still reads at the edges, but text always sits on a surface that
             clears WCAG AA contrast instead of washing out over a bright corner. */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 z-[1] bg-surface/55 backdrop-blur-[2px] dark:bg-background/45" />
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-[1] bg-surface/55 backdrop-blur-[2px]" />
         <div className="relative z-10">
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
             <span className="text-faint">//</span> local-first · your machine
