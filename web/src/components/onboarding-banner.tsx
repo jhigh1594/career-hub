@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { PetalSeal } from "@/components/petal-seal";
 import Link from "next/link";
-import { Sparkles, X, Settings } from "lucide-react";
+import { X, Settings } from "lucide-react";
 
 type Doctor = { available: boolean; onboardingNeeded: boolean; missing: string[]; warnings: string[] };
 
@@ -62,7 +63,7 @@ export function OnboardingBanner() {
           onClick={() => window.dispatchEvent(new CustomEvent("co-assistant", { detail: { message: kickoff } }))}
           className="mt-4 inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2 text-sm font-medium text-brand-foreground transition-colors hover:bg-brand-200"
         >
-          <Sparkles className="size-4" /> Set me up with the assistant
+          <PetalSeal className="size-4" /> Set me up with the assistant
         </button>
       ) : (
         // The assistant needs a CLI to run — without one the kickoff would silently

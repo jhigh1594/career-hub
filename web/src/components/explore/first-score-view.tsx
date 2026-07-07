@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Sparkles, X, FileText, Compass, ShieldCheck, Coins } from "lucide-react";
+import { X, FileText, Compass, ShieldCheck, Coins } from "lucide-react";
+import { PetalSeal } from "@/components/petal-seal";
 import { cn } from "@/lib/cn";
 import { instrumentSerif } from "@/lib/fonts";
 import { parseReport, scoreTone, legitimacyTone } from "@/lib/format";
@@ -14,9 +15,8 @@ const SEEN_KEY = "career-ops:first-score-seen";
 // north star: the WHY is the hero (a sentence that clearly read THIS CV and reasoned
 // about THIS job), the grade is large-but-secondary. A celebration, not a report.
 const STYLE = `
-.co-aha{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:1.2rem;background:color-mix(in srgb, var(--bg) 70%, rgba(0,0,0,.5));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);animation:co-aha-in .35s ease both}
-.co-aha__card{position:relative;width:min(34rem,100%);border-radius:1.3rem;border:1px solid var(--border,hsl(0 0% 50% /.2));background:var(--bg);box-shadow:0 24px 70px -20px rgba(0,0,0,.5);overflow:hidden}
-.co-aha__glow{position:absolute;inset:0;background:radial-gradient(80% 60% at 50% -10%, hsl(26 82% 55% /.22), transparent 70%);pointer-events:none}
+.co-aha{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:1.2rem;background:color-mix(in srgb, var(--bg) 72%, rgba(0,0,0,.45));animation:co-aha-in .35s ease both}
+.co-aha__card{position:relative;width:min(34rem,100%);border-radius:1.3rem;border:1px solid var(--color-hairline);background:var(--bg);box-shadow:0 24px 70px -20px rgba(0,0,0,.45);overflow:hidden}
 .co-aha__grade{font-variant-numeric:tabular-nums;line-height:1}
 @keyframes co-aha-in{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.co-aha{animation:none}}
@@ -117,7 +117,6 @@ export function FirstScoreView() {
     <div className="co-aha" role="dialog" aria-modal="true" aria-label="Your first score" onClick={close}>
       <style>{STYLE}</style>
       <div ref={panelRef} className="co-aha__card" onClick={(e) => e.stopPropagation()}>
-        <div className="co-aha__glow" />
         <button onClick={close} aria-label="Close" className="absolute right-3 top-3 z-10 rounded-md p-1.5 text-faint transition hover:text-foreground">
           <X className="size-4" />
         </button>
@@ -149,7 +148,7 @@ export function FirstScoreView() {
 
           {/* THE WHY — the hero. A sentence that read THIS CV against THIS job. */}
           <blockquote className={`${instrumentSerif.className} mt-5 border-l-2 border-brand/40 pl-4 text-[19px] leading-snug text-foreground`}>
-            <Sparkles className="mb-1 inline size-4 text-brand" /> {why}
+            <PetalSeal size="bullet" className="mb-0.5 mr-1.5 inline-block align-middle text-moss" />{why}
           </blockquote>
 
           {legit && (

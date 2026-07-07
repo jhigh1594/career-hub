@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ExternalLink, Plus, Check, Loader2, ShieldQuestion, Sparkles, Coins } from "lucide-react";
+import { PetalSeal } from "@/components/petal-seal";
+import { ExternalLink, Plus, Check, Loader2, ShieldQuestion, Coins } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { instrumentSerif } from "@/lib/fonts";
 import { ATS_LABEL, type AtsSource, type DiscoveredOffer } from "@/lib/explore";
@@ -105,7 +106,7 @@ export function DiscoveryCard({ offer, inPipeline, evaluatedN }: { offer: Discov
 
       {offer.why && (
         <p className="flex items-start gap-1.5 text-[12px] leading-snug text-brand/80">
-          <Sparkles className="mt-0.5 size-3 shrink-0" />
+          <PetalSeal className="mt-0.5 size-3 shrink-0" />
           {offer.why}
         </p>
       )}

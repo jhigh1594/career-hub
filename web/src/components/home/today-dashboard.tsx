@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { PetalSeal } from "@/components/petal-seal";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bell, CircleHelp, Sparkles, ArrowRight } from "lucide-react";
+import { Bell, CircleHelp, ArrowRight } from "lucide-react";
 import { instrumentSerif } from "@/lib/fonts";
 import { HeroGlow } from "@/components/hero-glow";
 import type { Application, InboxJob } from "@/lib/career-ops";
@@ -138,7 +139,7 @@ export function TodayDashboard({
 
       {/* C. Fresh matches this week (supply loop) */}
       {fresh.length > 0 && (
-        <Section icon={Sparkles} title="Fresh matches this week" hint="Found by your free scans · 0 tokens">
+        <Section icon={PetalSeal} title="Fresh matches this week" hint="Found by your free scans · 0 tokens">
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {fresh.slice(0, 6).map((o) => (
               <DiscoveryCard key={o.url} offer={o} inPipeline={inboxUrls.has(o.url)} />
@@ -154,7 +155,7 @@ export function TodayDashboard({
 
       {allClear && (
         <div className="mt-8 rounded-2xl border border-border bg-surface/30 px-6 py-10 text-center">
-          <Sparkles className="mx-auto size-6 text-brand" />
+          <PetalSeal className="mx-auto size-6 text-brand" />
           <p className="mx-auto mt-3 max-w-md text-sm text-muted">
             Nothing needs you right now. Run a <Link href="/explore" className="text-brand hover:underline">free scan</Link> to surface this week&apos;s roles, or check your <Link href="/pipeline" className="text-brand hover:underline">pipeline</Link>.
           </p>

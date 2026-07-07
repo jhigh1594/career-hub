@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Compass, ChevronDown, RotateCcw, AlertTriangle, Sparkles, Settings } from "lucide-react";
+import { PetalSeal } from "@/components/petal-seal";
+import { Compass, ChevronDown, RotateCcw, AlertTriangle, Settings } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { instrumentSerif } from "@/lib/fonts";
@@ -180,7 +181,7 @@ export function ExplorerView({
 
           {isResults && firstRun && (
             <div className="mb-4 flex items-start gap-2.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3">
-              <Sparkles className="mt-0.5 size-4 shrink-0 text-emerald-500" />
+              <PetalSeal className="mt-0.5 size-4 shrink-0 text-emerald-500" />
               <p className="text-[13px] leading-relaxed text-foreground">
                 These are live roles that match your CV. <span className="text-emerald-600">Nothing here cost you a token.</span> Pick the one you&apos;re most curious about — Evaluate it and I&apos;ll tell you exactly how you score, and why.
               </p>
@@ -258,7 +259,7 @@ function EmptyState({ tone, title, body, note, onRerun, rerunLabel }: { tone: "g
   return (
     <div className="rounded-2xl border border-border bg-surface/30 px-6 py-12 text-center">
       <div className={cn("mx-auto grid size-12 place-items-center rounded-full", tone === "good" ? "bg-emerald-500/12 text-emerald-500" : "bg-brand-soft text-brand")}>
-        <Sparkles className="size-6" />
+        <PetalSeal className="size-6" />
       </div>
       <h2 className={`${instrumentSerif.className} mt-4 text-2xl text-foreground`}>{title}</h2>
       <p className="mx-auto mt-1.5 max-w-md text-sm text-muted">{body}</p>
@@ -371,7 +372,7 @@ function BlockedCard() {
   return (
     <div className="rounded-2xl border border-border bg-surface/30 px-6 py-12 text-center">
       <div className="mx-auto grid size-12 place-items-center rounded-full bg-brand-soft text-brand">
-        <Sparkles className="size-6" />
+        <PetalSeal className="size-6" />
       </div>
       <h2 className={`${instrumentSerif.className} mt-4 text-2xl text-foreground`}>AI search needs a CLI</h2>
       <p className="mx-auto mt-1.5 max-w-md text-sm text-muted">

@@ -1,6 +1,7 @@
 "use client";
 
-import { Loader2, Wand2, Asterisk, Paperclip, Sparkles, ArrowUpRight, ShieldCheck, RotateCcw, FileCheck2, AlertTriangle, Terminal, Check, ScanLine, PenLine, CheckCircle2, Info, ExternalLink, MousePointerClick } from "lucide-react";
+import { Loader2, Wand2, Asterisk, Paperclip, ArrowUpRight, ShieldCheck, RotateCcw, FileCheck2, AlertTriangle, Terminal, Check, ScanLine, PenLine, CheckCircle2, Info, ExternalLink, MousePointerClick } from "lucide-react";
+import { PetalSeal } from "@/components/petal-seal";
 import type { ApplyIssue, DriveStep } from "@/lib/apply/issue";
 import { useApply } from "@/components/apply/apply-provider";
 import type { ApplyField } from "@/lib/apply/extract";
@@ -12,7 +13,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 const STYLE = `
 @keyframes co-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .co-rise{animation:co-rise .55s cubic-bezier(.22,1,.36,1) both}
-@keyframes co-flash{0%{box-shadow:0 0 0 0 hsl(26 82% 55% / 0)}22%{box-shadow:0 0 0 3px hsl(26 82% 55% / .38)}100%{box-shadow:0 0 0 0 hsl(26 82% 55% / 0)}}
+@keyframes co-flash{0%{box-shadow:0 0 0 0 rgba(242,178,51,0)}22%{box-shadow:0 0 0 3px rgba(242,178,51,.38)}100%{box-shadow:0 0 0 0 rgba(242,178,51,0)}}
 .co-flash{animation:co-flash 1.15s ease both;border-radius:.6rem}
 @keyframes co-shim{0%{background-position:-200% 0}100%{background-position:200% 0}}
 .co-skel{background:linear-gradient(90deg, color-mix(in srgb,var(--fg) 5%, transparent) 25%, color-mix(in srgb,var(--fg) 12%, transparent) 37%, color-mix(in srgb,var(--fg) 5%, transparent) 63%);background-size:200% 100%;animation:co-shim 1.6s linear infinite;border-radius:.5rem}
@@ -117,7 +118,7 @@ export function ApplyView() {
             <div className="mb-4 flex items-center gap-3 rounded-xl border border-brand/30 bg-brand-soft/60 px-4 py-3 backdrop-blur-sm">
               <span className="relative grid size-8 shrink-0 place-items-center">
                 <span className="co-orb absolute inset-0 rounded-full bg-brand/40 blur-[6px]" />
-                <Sparkles className="size-4 text-brand" />
+                <PetalSeal className="size-4 text-brand" />
               </span>
               <div className="min-w-0">
                 <div className="text-sm font-medium text-foreground">Drafting your answers…</div>
@@ -133,7 +134,7 @@ export function ApplyView() {
               disabled={prefilling || filling}
               className="inline-flex items-center gap-1.5 rounded-full border border-brand/40 bg-brand-soft px-3.5 py-1.5 text-sm font-medium text-brand transition-colors hover:bg-brand/15 disabled:opacity-50"
             >
-              {prefilling ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
+              {prefilling ? <Loader2 className="size-4 animate-spin" /> : <PetalSeal className="size-4" />}
               {prefilling ? "Drafting from your CV…" : "Pre-fill from my CV"}
             </button>
             <span className="text-xs text-muted">…or ask the corner assistant to write/revise any answer.</span>
@@ -369,7 +370,7 @@ function ProcessingHero({ title, subtitle }: { title: string; subtitle: string }
       <span className="relative grid size-16 place-items-center">
         <span className="co-orb absolute inset-0 rounded-full bg-brand/30 blur-lg" />
         <span className="co-ring absolute inset-0 rounded-full border-2 border-brand/30 border-t-brand" />
-        <Sparkles className="size-7 text-brand" />
+        <PetalSeal className="size-7 text-brand" />
       </span>
       <div className="font-display text-3xl text-landing">{title}</div>
       <p className="max-w-sm text-sm text-muted">{subtitle}</p>

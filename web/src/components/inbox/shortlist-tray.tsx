@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { PetalSeal } from "@/components/petal-seal";
 import Link from "next/link";
-import { ChevronDown, Coins, Settings, Sparkles, X } from "lucide-react";
+import { ChevronDown, Coins, Settings, X } from "lucide-react";
 import { CompanyLogo } from "@/components/company-logo";
 import { CostBadge } from "@/components/cost/cost-badge";
 import { cn } from "@/lib/cn";
@@ -92,7 +93,7 @@ export function ShortlistTray({
                   onClick={() => setConfirming(true)}
                   className="inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2 text-sm font-medium text-brand-foreground transition-colors hover:bg-brand-200 max-sm:min-h-[44px]"
                 >
-                  <Sparkles className="size-4" />
+                  <PetalSeal className="size-4" />
                   <span>Score {n}</span>
                   <span className="hidden text-xs font-normal text-brand-foreground/80 sm:inline">· {costText}</span>
                 </button>

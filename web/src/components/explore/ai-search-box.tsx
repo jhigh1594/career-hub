@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef } from "react";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { CostBadge } from "@/components/cost/cost-badge";
+import { PetalSeal } from "@/components/petal-seal";
 
 const EXAMPLES = [
   "AI infra roles at climate startups, remote EU",
@@ -10,17 +11,14 @@ const EXAMPLES = [
   "Head of Applied AI at healthtech, posted this week",
 ];
 
-// The "magic" natural-language box: a soft contained halo at rest that intensifies
-// on focus (erupts into the full-viewport hunt on submit). Effect CSS co-located
-// per the Tailwind v4 stale-CSS HMR gotcha.
+// Natural-language search box: a hairline surface that warms to an ochre halo
+// on focus. Effect CSS co-located per the Tailwind v4 stale-CSS HMR gotcha.
 const STYLE = `
-.co-aibox{position:relative;border-radius:1.1rem;border:1px solid var(--co-border,hsl(0 0% 50% /.22));background:color-mix(in srgb, var(--bg) 55%, transparent);transition:border-color .3s,box-shadow .3s}
-.co-aibox::before{content:"";position:absolute;inset:-1px;border-radius:1.1rem;padding:1px;background:radial-gradient(70% 140% at 28% -10%, hsl(26 82% 55% /.45), transparent 62%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.45;transition:opacity .3s;pointer-events:none}
-.co-aibox:focus-within::before{opacity:1}
-.co-aibox:focus-within{border-color:hsl(26 73% 51% /.5);box-shadow:0 0 0 4px hsl(26 73% 51% /.09)}
+.co-aibox{position:relative;border-radius:1.1rem;border:1px solid var(--color-hairline);background:var(--color-surface);transition:border-color .3s,box-shadow .3s}
+.co-aibox:focus-within{border-color:var(--color-ochre);box-shadow:0 0 0 3px rgba(242,178,51,.45)}
 .co-aibox textarea{width:100%;resize:none;background:transparent;border:none;outline:none;font-size:16px;line-height:1.5;color:inherit}
-.co-aibox textarea::placeholder{color:var(--co-faint,hsl(0 0% 58%))}
-@media(prefers-reduced-motion:reduce){.co-aibox,.co-aibox::before{transition:none}}
+.co-aibox textarea::placeholder{color:var(--color-faint)}
+@media(prefers-reduced-motion:reduce){.co-aibox{transition:none}}
 `;
 
 export function AiSearchBox({
@@ -51,8 +49,8 @@ export function AiSearchBox({
     <div>
       <style>{STYLE}</style>
       <div className="co-aibox p-4">
-        <div className="mb-2 flex items-center gap-2 text-[12px] font-medium text-brand">
-          <Sparkles className="size-3.5" /> Describe the role — an AI hunts the open web for it
+        <div className="mb-2 flex items-center gap-2 text-[12px] font-medium text-moss">
+          <PetalSeal size="bullet" /> Describe the role — an AI hunts the open web for it
         </div>
         <textarea
           ref={ref}
@@ -84,7 +82,7 @@ export function AiSearchBox({
             type="button"
             disabled={!intent.trim()}
             onClick={onSubmit}
-            className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:brightness-110 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-full bg-moss px-4 py-2 text-sm font-semibold text-parchment transition hover:bg-deep-loam disabled:opacity-50"
           >
             Search the open web
             <CostBadge kind="spend" size="xs" />
@@ -99,7 +97,7 @@ export function AiSearchBox({
             key={ex}
             type="button"
             onClick={() => onIntent(ex)}
-            className="rounded-full border border-border bg-surface/40 px-3 py-1.5 text-[12px] text-muted transition hover:border-brand/40 hover:text-brand"
+            className="rounded-full border border-hairline bg-surface/60 px-3 py-1.5 text-[12px] text-muted transition hover:border-moss/40 hover:text-moss"
           >
             {ex}
           </button>

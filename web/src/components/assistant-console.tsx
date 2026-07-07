@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { PetalSeal } from "@/components/petal-seal";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Send, X, Loader2, Settings, RotateCcw, ArrowUpRight, Sparkles } from "lucide-react";
+import { Send, X, Loader2, Settings, RotateCcw, ArrowUpRight } from "lucide-react";
 import { CoMark } from "@/components/co-mark";
 import { useJobs } from "@/components/jobs/job-store";
 import { usePipeline } from "@/components/pipeline/pipeline-provider";
@@ -536,7 +537,7 @@ export function AssistantConsole() {
                   onClick={() => send(s.send)}
                   className="inline-flex items-center gap-1 rounded-full border border-border bg-surface/60 px-2.5 py-1 text-xs text-muted transition-colors hover:border-brand/40 hover:bg-brand-soft hover:text-brand"
                 >
-                  <Sparkles className="size-3 text-brand/70" />
+                  <PetalSeal className="size-3 text-brand/70" />
                   {s.label}
                 </button>
               ))}
@@ -633,7 +634,7 @@ function PartView({
     return (
       <div className="rounded-xl border border-border bg-surface/40 p-2.5">
         <div className="mb-1.5 flex items-center gap-1.5 text-xs font-medium">
-          <Sparkles className="size-3.5 text-brand" />
+          <PetalSeal className="size-3.5 text-brand" />
           {part.jobIds.length} evaluations
           <span className="ml-auto tabular-nums text-faint">
             {done}/{part.jobIds.length} done

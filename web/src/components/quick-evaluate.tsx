@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles } from "lucide-react";
+import { PetalSeal } from "@/components/petal-seal";
 import { useJobs } from "@/components/jobs/job-store";
 import { CostBadge } from "@/components/cost/cost-badge";
 
@@ -27,7 +27,7 @@ export function QuickEvaluate() {
   return (
     <div className="mt-7">
       <div className="flex max-w-xl items-center gap-2 rounded-full border border-border bg-surface/70 py-1.5 pl-4 pr-1.5 shadow-sm focus-within:border-brand/50">
-        <Sparkles className="size-4 shrink-0 text-brand/70" />
+        <PetalSeal className="size-4 shrink-0 text-brand/70" />
         <input
           value={url}
           onChange={(e) => {

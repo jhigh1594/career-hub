@@ -1,6 +1,7 @@
 "use client";
 
-import { Compass, Sparkles } from "lucide-react";
+import { Compass } from "lucide-react";
+import { PetalSeal } from "@/components/petal-seal";
 import { cn } from "@/lib/cn";
 import { CostBadge } from "@/components/cost/cost-badge";
 import type { ExploreMode } from "@/lib/explore";
@@ -43,7 +44,7 @@ export function ExploreModeToggle({
           mode === "ai" ? "bg-brand-soft text-brand" : "text-muted hover:text-foreground",
         )}
       >
-        <Sparkles className="size-4" />
+        <PetalSeal className="size-4" />
         <span className="font-medium">AI search</span>
         <span className="hidden sm:inline-flex">
           <CostBadge kind="spend" size="xs" />

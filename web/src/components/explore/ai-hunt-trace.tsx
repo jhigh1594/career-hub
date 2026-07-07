@@ -1,20 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { Sparkles } from "lucide-react";
+import { PetalSeal } from "@/components/petal-seal";
 import { cn } from "@/lib/cn";
 import type { AiTraceChunk } from "@/lib/explore-ai";
 
-// The live reasoning panel — a CONTAINED, polished card (apply-mode vocabulary)
-// rather than raw text on the backdrop. The narration arrives as arbitrary stream
-// deltas (split mid-word), so we COALESCE every narration chunk into one string,
-// strip markdown, and re-split into clean SENTENCES — healing the fragments. Newest
-// emphasized; auto-scrolls; co-located effect CSS (Tailwind v4 HMR gotcha).
+// The live reasoning panel — a contained parchment card. Narration arrives as
+// arbitrary stream deltas (split mid-word), so we coalesce every chunk, strip
+// markdown, and re-split into clean sentences. Newest emphasized; auto-scrolls.
 const STYLE = `
-.co-reason__dot{width:.5rem;height:.5rem;border-radius:50%;background:hsl(26 80% 55%);box-shadow:0 0 0 0 hsl(26 80% 55% /.5);animation:co-reason-pulse 1.5s ease-out infinite}
+.co-reason__dot{width:.5rem;height:.5rem;border-radius:50%;background:var(--color-moss);animation:co-reason-blink 1.6s ease-in-out infinite}
 .co-reason__body{-webkit-mask-image:linear-gradient(180deg,transparent,#000 16%);mask-image:linear-gradient(180deg,transparent,#000 16%)}
 .co-reason__line{animation:co-reason-in .35s ease both}
-@keyframes co-reason-pulse{70%{box-shadow:0 0 0 .4rem hsl(26 80% 55% /0)}100%{box-shadow:0 0 0 0 hsl(26 80% 55% /0)}}
+@keyframes co-reason-blink{0%,100%{opacity:1}50%{opacity:.35}}
 @keyframes co-reason-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.co-reason__dot,.co-reason__line{animation:none}}
 `;
@@ -56,12 +54,12 @@ export function AiHuntTrace({ trace }: { trace: AiTraceChunk[] }) {
   if (sentences.length === 0) return null;
 
   return (
-    <div className="w-full max-w-2xl rounded-2xl border border-border/70 bg-surface/80 text-left shadow-xl shadow-black/10 backdrop-blur-md">
+    <div className="w-full max-w-2xl rounded-[20px] border border-hairline bg-surface text-left shadow-[0_12px_32px_rgba(20,58,43,0.10)]">
       <style>{STYLE}</style>
-      <div className="flex items-center gap-2 border-b border-border/60 px-4 py-2.5">
+      <div className="flex items-center gap-2 border-b border-hairline px-4 py-2.5">
         <span className="co-reason__dot" />
         <span className="text-[12px] font-medium text-foreground">Reasoning live</span>
-        <Sparkles className="ml-auto size-3.5 text-brand/70" />
+        <PetalSeal size="bullet" className="ml-auto text-moss/60" />
       </div>
       <div ref={bodyRef} className="co-reason__body flex max-h-52 flex-col gap-2 overflow-y-auto px-4 py-3">
         {sentences.map((s, i) => (
