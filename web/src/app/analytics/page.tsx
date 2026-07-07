@@ -1,5 +1,7 @@
 import { pipelineSummary } from "@/lib/career-ops";
 import { canonStatus, scoreNum } from "@/lib/format";
+import { instrumentSerif } from "@/lib/fonts";
+import { PetalSeal } from "@/components/petal-seal";
 
 export const dynamic = "force-dynamic";
 
@@ -48,7 +50,7 @@ export default function Analytics() {
 
       {/* headline stats */}
       <div className="mt-6 grid gap-4 sm:grid-cols-4">
-        <Stat value={total} label="evaluated" />
+        <Stat value={total} label="evaluated" featured />
         <Stat value={avg ? avg.toFixed(2) : "—"} label="avg score" />
         <Stat value={interviews} label="interviews" />
         <Stat value={offers} label="offers" />
@@ -75,19 +77,31 @@ export default function Analytics() {
   );
 }
 
-function Stat({ value, label }: { value: number | string; label: string }) {
+function Stat({ value, label, featured = false }: { value: number | string; label: string; featured?: boolean }) {
   return (
-    <div className="rounded-2xl border border-border bg-surface/50 p-4">
-      <div className="text-3xl font-semibold tabular-nums">{value}</div>
-      <div className="mt-1 text-xs text-faint">{label}</div>
+    <div
+      className={`relative overflow-hidden rounded-[20px] p-4 ${
+        featured ? "bg-moss text-parchment" : "border border-hairline bg-surface text-foreground"
+      }`}
+    >
+      {featured && (
+        <PetalSeal className="absolute -bottom-8 -right-8 h-28 w-28 text-parchment opacity-[0.10]" />
+      )}
+      <div className={`relative text-3xl leading-none tabular-nums ${featured ? instrumentSerif.className : "font-semibold"}`}>
+        {value}
+      </div>
+      <div className={`relative mt-2 text-xs ${featured ? "text-parchment/75" : "text-faint"}`}>{label}</div>
     </div>
   );
 }
 
 function Section({ title, children, id }: { title: string; children: React.ReactNode; id?: string }) {
   return (
-    <section id={id} className="mt-10 scroll-mt-8">
-      <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">{title}</h2>
+    <section id={id} className="mt-12 scroll-mt-8">
+      <div className="flex items-center gap-2">
+        <PetalSeal size="bullet" className="text-moss/50" />
+        <h2 className={`${instrumentSerif.className} text-xl tracking-tight text-landing`}>{title}</h2>
+      </div>
       <div className="mt-4 space-y-2.5">{children}</div>
     </section>
   );

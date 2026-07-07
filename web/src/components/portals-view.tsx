@@ -5,16 +5,17 @@ import Link from "next/link";
 import { Loader2, Radar, Wrench } from "lucide-react";
 import { CompanyLogo } from "@/components/company-logo";
 import { useJobs, type Job } from "@/components/jobs/job-store";
+import { instrumentSerif } from "@/lib/fonts";
 import { cn } from "@/lib/cn";
 
 type Company = { name: string; status: string; detail: string };
 type Result = { available: boolean; configured: boolean; companies: Company[] };
 
 const TONE: Record<string, { dot: string; label: string; chip: string }> = {
-  live: { dot: "bg-emerald-500", label: "live", chip: "bg-emerald-500/15 text-emerald-700" },
-  empty: { dot: "bg-amber-500", label: "live · empty", chip: "bg-amber-500/15 text-amber-700" },
-  broken: { dot: "bg-red-500", label: "broken", chip: "bg-red-500/15 text-red-700" },
-  skipped: { dot: "bg-zinc-400", label: "no ATS", chip: "bg-surface-hover text-muted" },
+  live: { dot: "bg-moss", label: "live", chip: "bg-sage text-moss" },
+  empty: { dot: "bg-ochre", label: "live · empty", chip: "bg-ochre/20 text-moss" },
+  broken: { dot: "bg-coral", label: "broken", chip: "bg-coral/15 text-coral" },
+  skipped: { dot: "bg-faint", label: "no ATS", chip: "bg-surface-hover text-muted" },
 };
 const ORDER: Record<string, number> = { broken: 0, empty: 1, live: 2, skipped: 3 };
 
@@ -50,11 +51,15 @@ export function PortalsView() {
 
   return (
     <div>
+      <header className="mb-6">
+        <h1 className={`${instrumentSerif.className} text-2xl tracking-tight text-landing`}>Portals</h1>
+        <p className="mt-1 text-sm text-muted">Health of each tracked company&apos;s ATS board.</p>
+      </header>
       <div className="flex items-center gap-3">
         <button
           onClick={check}
           disabled={loading}
-          className="inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2 text-sm font-medium text-brand-foreground transition-colors hover:bg-brand-200 disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-full bg-moss px-4 py-2 text-sm font-medium text-parchment transition-colors hover:bg-deep-loam disabled:opacity-50"
         >
           {loading ? <Loader2 className="size-4 animate-spin" /> : <Radar className="size-4" />}
           Check portal health
@@ -82,7 +87,7 @@ export function PortalsView() {
             <span className="tabular-nums">{companies.length}</span> tracked
           </p>
           {broken.length > 0 && (
-            <div className="mt-3 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm">
+            <div className="mt-3 rounded-xl border border-coral/30 bg-coral/10 px-4 py-3 text-sm">
               <span className="font-medium text-red-700">
                 {broken.length} {broken.length === 1 ? "company silently drops" : "companies silently drop"} from every
                 scan
