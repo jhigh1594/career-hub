@@ -6,7 +6,6 @@ import { cn } from "@/lib/cn";
 import { CoMark } from "@/components/co-mark";
 import { AssistantConsole } from "@/components/assistant-console";
 import { MobileNav } from "@/components/mobile-nav";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { JobsProvider } from "@/components/jobs/job-store";
 import { PipelineProvider } from "@/components/pipeline/pipeline-provider";
 import { ApplyProvider } from "@/components/apply/apply-provider";
@@ -64,9 +63,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
           <div className="mt-auto space-y-3 pt-4">
             <UsageMeter />
-            <div className="flex items-center justify-between px-1">
+            <div className="px-1">
               <span className={`${instrumentSerif.className} text-sm text-faint`}>local-first · v0</span>
-              <ThemeToggle />
             </div>
           </div>
         </aside>

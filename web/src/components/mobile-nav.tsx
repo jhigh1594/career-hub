@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { CoMark } from "@/components/co-mark";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { WorkerPills } from "@/components/jobs/worker-pills";
 import { UsageMeter } from "@/components/usage-meter";
 import { instrumentSerif } from "@/lib/fonts";
@@ -110,7 +109,6 @@ export function MobileNav() {
           <span className={`${instrumentSerif.className} relative -top-px text-xl text-landing`}>career-ops</span>
         </Link>
         <div className="ml-auto flex items-center gap-0.5">
-          <ThemeToggle />
           <button
             type="button"
             onClick={() => setOpen(true)}
@@ -183,7 +181,6 @@ export function MobileNav() {
           <UsageMeter />
           <div className="flex items-center justify-between">
             <span className={`${instrumentSerif.className} text-sm text-faint`}>local-first · v0</span>
-            <ThemeToggle />
           </div>
         </div>
       </aside>
