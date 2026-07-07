@@ -7,9 +7,9 @@ import { pillTone } from "@/components/jobs/worker-pills";
 import { cn } from "@/lib/cn";
 
 const TONE_CHIP = {
-  good: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-  warn: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
-  bad: "bg-red-500/15 text-red-700 dark:text-red-400",
+  good: "bg-emerald-500/15 text-emerald-700",
+  warn: "bg-amber-500/15 text-amber-700",
+  bad: "bg-red-500/15 text-red-700",
   muted: "bg-surface-hover text-muted",
 } as const;
 

@@ -100,7 +100,7 @@ function Bar({ label, value, pct, total }: { label: string; value: number; pct: 
       <div className="w-32 shrink-0 truncate text-sm text-muted">{label}</div>
       <div className="relative h-7 flex-1 overflow-hidden rounded-md bg-surface">
         <div
-          className="h-full rounded-md bg-gradient-to-r from-brand/70 to-brand/40"
+          className="h-full rounded-md bg-moss"
           style={{ width: `${Math.max(pct, value > 0 ? 4 : 0)}%` }}
         />
       </div>
