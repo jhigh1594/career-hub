@@ -157,8 +157,8 @@ export function MobileNav() {
                 onClick={() => setOpen(false)}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] transition-colors",
-                  active ? "bg-brand-soft text-brand" : "text-muted hover:bg-surface-hover hover:text-foreground",
+                  "flex items-center gap-3 rounded-lg px-3 py-3 text-[15px] font-medium transition-colors",
+                  active ? "bg-moss text-parchment" : "text-muted hover:bg-surface-hover hover:text-foreground",
                 )}
               >
                 <Icon className="size-5" />

@@ -1,14 +1,12 @@
 import { instrumentSerif } from "@/lib/fonts";
 
-// Brand mark — lowercase "co" on brand orange in Instrument Serif. Matches the
-// favicon (src/app/icon.tsx) and the career-ops-docs home one-for-one so the
-// app reads as a sibling. Dual meaning: "co" of career-ops AND "co" of
-// companies — the word the manifesto inverts ("…AI to choose companies").
+// Brand mark — lowercase "co" on moss in Fraunces. Paired with the Petal Seal
+// in the app shell. Dual meaning: "co" of career-ops AND "co" of companies.
 export function CoMark({ size = 28 }: { size?: number }) {
   return (
     <span
       aria-hidden="true"
-      className={`${instrumentSerif.className} inline-flex shrink-0 items-center justify-center rounded-md bg-brand text-white`}
+      className={`${instrumentSerif.className} inline-flex shrink-0 items-center justify-center rounded-md bg-moss text-parchment`}
       style={{
         width: size,
         height: size,

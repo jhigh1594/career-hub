@@ -90,7 +90,7 @@ export function BetaBanner() {
 
   return (
     <>
-      <div className="fixed bottom-3 left-3 z-[70] flex items-center gap-2 rounded-full border border-brand/30 bg-surface/90 px-3 py-1.5 text-xs shadow-lg backdrop-blur-md">
+      <div className="fixed bottom-3 left-3 z-[70] flex items-center gap-2 rounded-full border border-hairline bg-surface px-3 py-1.5 text-xs shadow-lg">
         <span className="flex items-center gap-1.5 font-medium text-brand">
           <span className="size-1.5 animate-pulse rounded-full bg-brand" /> {meta.version} · {meta.channel}
         </span>
@@ -132,13 +132,13 @@ export function BetaBanner() {
               <pre className="max-h-52 overflow-auto whitespace-pre-wrap border-t border-border px-3 py-2 font-mono text-[11px] leading-relaxed text-muted">{issueBody(diag, desc)}</pre>
             </details>
             {similar.length > 0 && (
-              <div className="mt-3 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2">
-                <p className="text-xs font-medium text-amber-700 dark:text-amber-400">Already reported? A 👍 on an existing issue beats a duplicate:</p>
+              <div className="mt-3 rounded-lg border border-ochre/30 bg-ochre/15 px-3 py-2">
+                <p className="text-xs font-medium text-ochre">Already reported? A 👍 on an existing issue beats a duplicate:</p>
                 <ul className="mt-1.5 space-y-1">
                   {similar.map((s) => (
                     <li key={s.number}>
-                      <a href={s.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-xs text-foreground underline-offset-2 transition-colors hover:text-brand hover:underline">
-                        <ThumbsUp className="size-3 shrink-0 text-amber-600 dark:text-amber-400" />
+                      <a href={s.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-xs text-foreground underline-offset-2 transition-colors hover:text-moss hover:underline">
+                        <ThumbsUp className="size-3 shrink-0 text-ochre" />
                         <span className="font-mono">#{s.number}</span> {s.title.slice(0, 60)}
                       </a>
                     </li>

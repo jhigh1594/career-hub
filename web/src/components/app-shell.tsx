@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
 import { CoMark } from "@/components/co-mark";
+import { PetalSeal } from "@/components/petal-seal";
 import { AssistantConsole } from "@/components/assistant-console";
 import { MobileNav } from "@/components/mobile-nav";
 import { JobsProvider } from "@/components/jobs/job-store";
@@ -32,6 +33,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <span className={`${instrumentSerif.className} relative -top-px text-2xl font-normal tracking-tight text-landing`}>
               career-ops
             </span>
+            <PetalSeal size="signature" className="ml-auto text-moss/30" />
           </Link>
           <nav className="flex flex-col gap-1">
             {NAV_ITEMS.map(({ href, label, icon: Icon, chip }) => {
@@ -40,10 +42,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <Link
                   key={href}
                   href={href}
+                  aria-current={active ? "page" : undefined}
                   className={cn(
-                    "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
+                    "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                     active
-                      ? "bg-brand-soft text-brand"
+                      ? "bg-moss text-parchment"
                       : "text-muted hover:bg-surface-hover hover:text-foreground",
                   )}
                 >

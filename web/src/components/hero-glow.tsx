@@ -1,57 +1,20 @@
-"use client";
+import { PetalSeal } from "@/components/petal-seal";
 
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-
-// The career-ops-docs home signature: an animated grain-gradient glow. Deferred
-// to browser idle, skipped on reduced-motion, ssr:false → zero LCP cost. Renders
-// grain in the corners (transparent center) so the dot-grid shows through.
-const GrainGradient = dynamic(
-  () => import("@paper-design/shaders-react").then((m) => m.GrainGradient),
-  { ssr: false },
-);
-
+// Verdara has no gradients/glass — the old animated grain-gradient glow is
+// replaced by a static, faint Petal-Seal watermark. Same component name and
+// absolute full-bleed positioning so existing callers (Today, first-run,
+// job detail) need no edits. Zero LCP cost (inline SVG), no theme dependency.
 export function HeroGlow() {
-  const [show, setShow] = useState(false);
-  const [dark, setDark] = useState(true);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const readTheme = () => setDark(document.documentElement.classList.contains("dark"));
-    readTheme();
-    window.addEventListener("themechange", readTheme);
-
-    const w = window as Window & {
-      requestIdleCallback?: (cb: () => void, o?: { timeout?: number }) => number;
-    };
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    if (typeof w.requestIdleCallback === "function") {
-      w.requestIdleCallback(() => setShow(true), { timeout: 2000 });
-    } else {
-      timer = setTimeout(() => setShow(true), 400);
-    }
-
-    return () => {
-      window.removeEventListener("themechange", readTheme);
-      if (timer) clearTimeout(timer);
-    };
-  }, []);
-
-  if (!show) return null;
-
   return (
-    <GrainGradient
-      className="absolute inset-0 z-0 animate-fade-in-delayed"
-      colors={dark ? ["#D5742E", "#9c2f05", "#7A2A0000"] : ["#f6c89a", "#e8a35f", "#D5742E00"]}
-      colorBack="#00000000"
-      softness={1}
-      intensity={dark ? 0.42 : 0.26}
-      noise={0.32}
-      speed={0.45}
-      shape="corners"
-      minPixelRatio={1}
-      maxPixelCount={1920 * 1080}
-    />
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
+      <PetalSeal
+        size="watermark"
+        className="absolute -right-24 -top-24 h-[420px] w-[420px] text-moss opacity-[0.06]"
+      />
+      <PetalSeal
+        size="watermark"
+        className="absolute -bottom-32 -left-32 h-[360px] w-[360px] text-ochre opacity-[0.07]"
+      />
+    </div>
   );
 }
