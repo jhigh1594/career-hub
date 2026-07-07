@@ -54,7 +54,7 @@ export function ApplyView() {
             <div className="flex items-start gap-2.5">
               <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-500" />
               <div className="min-w-0">
-                <p className="text-sm text-amber-800 dark:text-amber-300">{a.error}</p>
+                <p className="text-sm text-amber-800">{a.error}</p>
                 {a.url && /^https?:\/\//.test(a.url) && (
                   <a href={a.url} target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-brand hover:underline">
                     Open the form directly <ExternalLink className="size-3" />
@@ -104,7 +104,7 @@ export function ApplyView() {
       {driving && <DrivePanel steps={a.driveSteps} />}
 
       {a.error && (
-        <p className="co-rise mb-3 flex items-start gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-700 backdrop-blur-sm dark:text-amber-400">
+        <p className="co-rise mb-3 flex items-start gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-700 backdrop-blur-sm">
           <AlertTriangle className="mt-0.5 size-4 shrink-0" /> {a.error}
         </p>
       )}
@@ -149,7 +149,7 @@ export function ApplyView() {
               <div className="max-h-52 overflow-y-auto border-t border-border px-3 py-2">
                 <ol className="space-y-0.5 font-mono text-[11px] leading-relaxed text-muted">
                   {a.prefillLog.map((l, i) => (
-                    <li key={i} className={l.startsWith("✗") ? "text-amber-600 dark:text-amber-400" : ""}>
+                    <li key={i} className={l.startsWith("✗") ? "text-amber-600" : ""}>
                       {l}
                     </li>
                   ))}
@@ -223,7 +223,7 @@ export function ApplyView() {
             <div className="co-rise mt-4 flex items-start gap-2.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm backdrop-blur-sm">
               <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-emerald-500" />
               <div>
-                <span className="font-medium text-emerald-700 dark:text-emerald-400">The real form is now in front, pre-filled.</span>{" "}
+                <span className="font-medium text-emerald-700">The real form is now in front, pre-filled.</span>{" "}
                 <span className="text-muted">Review it and click Submit yourself — career-ops never submits for you.</span>
               </div>
             </div>
@@ -280,10 +280,10 @@ function ApplyIssues({ issues }: { issues: ApplyIssue[] }) {
     <div className="mb-4 space-y-2">
       {warns.length > 0 && (
         <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 backdrop-blur-sm">
-          <div className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-amber-700 dark:text-amber-400">
+          <div className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-amber-700">
             <AlertTriangle className="size-4" /> A few things to check
           </div>
-          <ul className="space-y-1 text-xs text-amber-800/90 dark:text-amber-300/90">
+          <ul className="space-y-1 text-xs text-amber-800/90">
             {warns.map((i, k) => (
               <li key={k} className="flex gap-1.5">
                 <span className="mt-px text-amber-500">•</span> {i.message}
@@ -431,7 +431,7 @@ function FieldRow({
       <label className="mb-1.5 flex items-center gap-1 text-sm font-medium">
         {f.label || <span className="text-faint">Untitled field</span>}
         {f.required && <Asterisk className="size-3 text-brand" />}
-        {needs && <span className="ml-1 rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-amber-600 dark:text-amber-400">you confirm</span>}
+        {needs && <span className="ml-1 rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-amber-600">you confirm</span>}
       </label>
       {writing ? (
         <div className={cn("co-skel", f.type === "textarea" ? "h-[68px]" : "h-9")} />
@@ -452,7 +452,7 @@ function FieldRow({
         </label>
       ) : f.type === "file" ? (
         /resume|résumé|\bcv\b|curriculum|currículum|lebenslauf/i.test(f.label || "") ? (
-          <div className="flex items-center gap-2 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-400">
+          <div className="flex items-center gap-2 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-700">
             <FileCheck2 className="size-4 shrink-0" /> Your tailored CV (PDF) will be attached automatically — you can swap it on the real form.
           </div>
         ) : (
