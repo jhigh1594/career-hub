@@ -1,25 +1,27 @@
 import { cn } from "@/lib/cn";
 
-// Score / status pill. No brand tone — orange is reserved for "active/selected"
-// (active tab, nav, focus ring), never for a score. Grades route through the
-// good/warn/bad scale so the table stays legible.
+// Verdara badge — solid-accent pill. Score/status grades route through the
+// good/warn/bad scale mapped onto the Verdara palette (sage / ochre / coral).
+// Pill shape per Verdara; no dark variants (light-only).
 export function Badge({
   className,
   tone = "muted",
   ...props
 }: React.HTMLAttributes<HTMLSpanElement> & {
-  tone?: "good" | "warn" | "bad" | "muted";
+  tone?: "good" | "warn" | "bad" | "muted" | "moss" | "mist";
 }) {
   const tones = {
-    good: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400",
-    warn: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
-    bad: "bg-red-500/15 text-red-700 dark:text-red-400",
+    good: "bg-sage text-moss",
+    warn: "bg-ochre text-moss",
+    bad: "bg-coral text-parchment",
     muted: "bg-surface-hover text-muted",
+    moss: "bg-moss text-parchment",
+    mist: "bg-mist text-moss",
   } as const;
   return (
     <span
       className={cn(
-        "inline-block rounded-md px-1.5 py-0.5 text-xs font-semibold tabular-nums",
+        "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold uppercase tracking-wide tabular-nums",
         tones[tone],
         className,
       )}
