@@ -110,6 +110,8 @@ const SYSTEM_PATHS = [
   'archive-posting.mjs',
   'application-answers.mjs',
   'generate-cover-letter.mjs',
+  'generate-deck.mjs',
+  'generate-deck.test.mjs',
   'merge-tracker.mjs',
   'tracker-links.mjs',
   'tracker.mjs',

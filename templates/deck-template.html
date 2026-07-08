@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{NAME}} — Case Study Deck</title>
+<style>
+  /* ponytail: system-font stack (no @font-face file dependency). The deck is a
+     human-read wow artifact, not ATS-parsed (non-goal). Visual craft comes from
+     layout, type scale, and color — not a custom font file. A @font-face block
+     pointing at a file under fonts/ would be auto-inlined by
+     generate-pdf.mjs:inlineLocalFonts if a brand display font is wanted later;
+     until then, system fonts are zero-risk and proven in cv-template.html. */
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Disable fi/fl/ffi ligatures — headless Chromium substitutes these with
+       U+FB01/FB02/FB03 at PDF layout time, corrupting text extraction if the
+       deck PDF is ever parsed or searched. Carried from cv-template.html. */
+    font-variant-ligatures: none;
+    font-feature-settings: "liga" 0, "clig" 0, "dlig" 0;
+  }
+
+  :root {
+    --accent: {{ACCENT}};
+    --ink: #15151c;
+    --ink-soft: #4a4a57;
+    --paper: #ffffff;
+    --paper-soft: #f5f5f7;
+    --rule: #e2e2e8;
+  }
+
+  html {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Helvetica Neue', 'Liberation Sans', Arial, 'DejaVu Sans', sans-serif;
+    color: var(--ink);
+    background: var(--paper-soft);
+    line-height: 1.5;
+    font-variant-ligatures: none;
+    font-feature-settings: "liga" 0, "clig" 0, "dlig" 0;
+  }
+
+  /* ── Slide primitive ───────────────────────────────────────────────────────
+     One .slide = one screen snap target AND one PDF page.
+     @media screen: scroll-snap drives nav. @media print: page-break-after
+     drives pagination. Both coexist — scroll-snap is screen-only so it cannot
+     break the PDF (print omits snap). */
+  .slide {
+    width: 100%;
+    min-height: 100vh;
+    padding: 64px 8vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--paper);
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media screen {
+    html { scroll-snap-type: y mandatory; }
+    .slide { scroll-snap-align: start; scroll-snap-stop: always; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .slide { scroll-snap-align: none; }
+  }
+
+  /* ── Dark / full-bleed slides (title, hook, POV, CTA) ────────────────────── */
+  .slide.dark {
+    background: var(--ink);
+    color: #f7f7fa;
+  }
+  .slide.dark a { color: #9ad0ff; }
+
+  .slide .accent-bar {
+    width: 56px; height: 5px; background: var(--accent);
+    border-radius: 3px; margin-bottom: 28px;
+  }
+
+  /* ── Title slide ─────────────────────────────────────────────────────────── */
+  .title-kicker {
+    font-size: clamp(11px, 1.6vw, 14px);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin-bottom: 20px;
+  }
+  .title-name {
+    font-size: clamp(34px, 6vw, 64px); font-weight: 800;
+    line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 18px;
+  }
+  .title-role { font-size: clamp(16px, 2.4vw, 24px); color: #c9c9d4; font-weight: 400; }
+  .title-contact { margin-top: 36px; font-size: clamp(11px, 1.4vw, 14px); color: #8e8ea0; }
+  .title-contact a { color: #9ad0ff; text-decoration: none; }
+
+  /* ── Hook slide (visual singularity — the 7-second scan lives here) ─────────
+     The hook metric is the dominant element on the deck (largest type). Only
+     the hook slide gets this treatment — visual singularity signals "start here". */
+  .hook-kicker {
+    font-size: clamp(11px, 1.6vw, 14px); letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 24px;
+  }
+  .hook-metric {
+    font-size: clamp(48px, 11vw, 132px); font-weight: 800; line-height: 0.98;
+    letter-spacing: -0.03em; color: var(--accent); margin-bottom: 28px;
+  }
+  .hook-headline {
+    font-size: clamp(20px, 3.4vw, 38px); font-weight: 600; line-height: 1.25;
+    max-width: 22ch;
+  }
+
+  /* ── Case-study content slides ───────────────────────────────────────────── */
+  .study-label {
+    font-size: clamp(10px, 1.3vw, 13px); letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 14px;
+  }
+  .study-meta { font-size: clamp(11px, 1.4vw, 15px); color: var(--ink-soft); margin-bottom: 10px; }
+  .beat-h {
+    font-size: clamp(22px, 3.6vw, 40px); font-weight: 700; line-height: 1.15;
+    letter-spacing: -0.015em; margin-bottom: 22px; max-width: 24ch;
+  }
+  .beat-body { font-size: clamp(15px, 2vw, 21px); line-height: 1.55; color: var(--ink-soft); max-width: 62ch; }
+  .beat-body strong { color: var(--ink); font-weight: 600; }
+
+  .outcome-number {
+    font-size: clamp(40px, 8vw, 92px); font-weight: 800; color: var(--accent);
+    line-height: 1; letter-spacing: -0.02em; margin-bottom: 18px;
+  }
+  .outcome-detail { font-size: clamp(15px, 2vw, 21px); color: var(--ink-soft); max-width: 56ch; }
+
+  /* Artifact: figure + required alt + optional caption */
+  figure.artifact { margin-top: 28px; max-width: 100%; }
+  figure.artifact img {
+    max-width: 100%; height: auto; border-radius: 10px;
+    border: 1px solid var(--rule); display: block;
+  }
+  figure.artifact figcaption {
+    margin-top: 12px; font-size: clamp(12px, 1.5vw, 16px);
+    color: var(--ink-soft); line-height: 1.45; max-width: 62ch;
+  }
+
+  /* Decision: trade-off treatment */
+  .tradeoff { display: flex; gap: 28px; flex-wrap: wrap; margin-top: 8px; }
+  .tradeoff .col { flex: 1; min-width: 220px; }
+  .tradeoff .col-h { font-weight: 700; color: var(--ink); margin-bottom: 8px; font-size: clamp(13px, 1.7vw, 17px); }
+  .tradeoff .col-b { color: var(--ink-soft); font-size: clamp(13px, 1.7vw, 17px); line-height: 1.5; }
+
+  /* Reflection — distinct treatment (italic, softer) to read as the maturity beat */
+  .reflection-body {
+    font-size: clamp(16px, 2.2vw, 24px); line-height: 1.6; font-style: italic;
+    color: var(--ink-soft); max-width: 60ch;
+  }
+  .reflection-body::before { content: "\201C"; font-size: 1.4em; color: var(--accent); margin-right: 4px; vertical-align: -0.1em; }
+
+  /* POV slide — distinct from case studies (full-bleed accent quote treatment) */
+  .slide.pov { background: var(--accent); color: #ffffff; }
+  .slide.pov .pov-kicker { font-size: clamp(11px, 1.6vw, 14px); letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700; margin-bottom: 24px; opacity: 0.85; }
+  .slide.pov .pov-body { font-size: clamp(22px, 4vw, 44px); font-weight: 600; line-height: 1.3; max-width: 24ch; letter-spacing: -0.01em; }
+
+  /* CTA slide */
+  .cta-h { font-size: clamp(26px, 4.4vw, 52px); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 24px; max-width: 20ch; }
+  .cta-contact { font-size: clamp(14px, 1.8vw, 19px); color: #c9c9d4; }
+  .cta-contact a { color: #9ad0ff; text-decoration: none; }
+
+  /* ── Mobile reflow ───────────────────────────────────────────────────────── */
+  @media (max-width: 767px) {
+    .slide { padding: 44px 22px; min-height: 100vh; }
+    .beat-body, .outcome-detail { max-width: 100%; }
+    .tradeoff { flex-direction: column; gap: 18px; }
+    /* Hook headline + metric stay above the fold; justify-content: center keeps
+       the metric in the first viewport on phone. */
+  }
+
+  /* ── Print: one .slide = one @page, no overflow, no blank pages ────────────
+     scroll-snap is screen-only (above), so it cannot interfere with pagination.
+     Each slide fills exactly one page; page-break-after separates them. */
+  @media print {
+    html, body { background: #ffffff; }
+    .slide {
+      min-height: 100vh; height: 100vh;
+      padding: 48px 56px; page-break-after: always; break-after: page;
+      overflow: hidden;
+    }
+    .slide:last-child { page-break-after: auto; break-after: auto; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Title slide -->
+  <section class="slide dark" id="title">
+    <div class="accent-bar"></div>
+    <div class="title-kicker">Case Study Deck</div>
+    <div class="title-name">{{NAME}}</div>
+    <div class="title-role">{{ROLE}} <span style="color:#5a5a6a;">·</span> {{COMPANY}}</div>
+    <div class="title-contact">{{CONTACT_LINE}}</div>
+  </section>
+
+  <!-- Hook slide — visual singularity, metric is the dominant element -->
+  <section class="slide dark" id="hook">
+    <div class="hook-kicker">The headline</div>
+    <div class="hook-metric">{{HOOK_METRIC}}</div>
+    <div class="hook-headline">{{HOOK_HEADLINE}}</div>
+  </section>
+
+  <!-- Case studies — built by generate-deck.mjs, one slide per beat that has content -->
+  {{STUDIES_HTML}}
+
+  <!-- Optional point-of-view slide (senior separator; payload-driven, absent = omitted) -->
+  {{POV_HTML}}
+
+  <!-- CTA slide -->
+  <section class="slide dark" id="cta">
+    <div class="accent-bar"></div>
+    <div class="cta-h">{{CTA_LINE}}</div>
+    <div class="cta-contact">{{CTA_CONTACT}}</div>
+  </section>
+
+</body>
+</html>

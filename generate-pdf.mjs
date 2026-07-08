@@ -392,6 +392,10 @@ export async function renderHtmlToPdf(html, outputPath, opts = {}) {
   const baseDir = opts.baseDir || process.cwd();
   const reportNum = opts.reportNum || '';
   const inputPath = opts.inputPath || '';
+  // skipManifest: callers that maintain their own index (e.g. generate-deck.mjs
+  // writes data/deck-index.tsv) opt out of the CV pdf-index.tsv row. Default
+  // false preserves CV/cover-letter behavior.
+  const skipManifest = opts.skipManifest === true;
 
   mkdirSync(dirname(outputPath), { recursive: true });
 
@@ -440,8 +444,12 @@ export async function renderHtmlToPdf(html, outputPath, opts = {}) {
     console.log(`📦 Size: ${(pdfBuffer.length / 1024).toFixed(1)} KB`);
 
     try {
-      updatePDFManifest(reportNum, outputPath, inputPath, format);
-      console.log(`🔗 Manifest: data/pdf-index.tsv updated${reportNum ? ` (report ${reportNum})` : ' (no --report given)'}`);
+      if (skipManifest) {
+        console.log('🔗 Manifest: skipped (caller maintains its own index)');
+      } else {
+        updatePDFManifest(reportNum, outputPath, inputPath, format);
+        console.log(`🔗 Manifest: data/pdf-index.tsv updated${reportNum ? ` (report ${reportNum})` : ' (no --report given)'}`);
+      }
     } catch (err) {
       // The PDF itself succeeded — never fail the run over manifest bookkeeping.
       console.error(`⚠️  Manifest update failed: ${err.message}`);
