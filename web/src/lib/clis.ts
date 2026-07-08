@@ -16,6 +16,7 @@ export type CliSpec = {
 
 export const KNOWN: CliSpec[] = [
   { id: "claude", name: "Claude Code", bin: "claude", run: "claude -p", url: "https://claude.ai/code", args: (p) => ["-p", p] },
+  { id: "claudeglm", name: "Claude Code · GLM (z.ai)", bin: "claudeglm", run: "claudeglm -p", url: "https://z.ai", args: (p) => ["-p", p] },
   { id: "codex", name: "Codex", bin: "codex", run: "codex exec", url: "https://github.com/openai/codex", args: (p) => ["exec", p] },
   { id: "gemini", name: "Gemini CLI", bin: "gemini", run: "gemini -p", url: "https://github.com/google-gemini/gemini-cli", args: (p) => ["-p", p] },
   { id: "opencode", name: "OpenCode", bin: "opencode", run: "opencode run", url: "https://opencode.ai", args: (p) => ["run", p] },
@@ -89,6 +90,9 @@ export function detectClis() {
     return { id: c.id, name: c.name, run: c.run, url: c.url, installed: !!found, path: found };
   });
 }
+
+/** claudeglm is Claude Code pre-routed to z.ai/GLM — same CLI shape, same flags. */
+export const isClaudeFamily = (id: string): boolean => id === "claude" || id === "claudeglm";
 
 export function resolveCli(id: string): { spec: CliSpec; binPath: string } | null {
   const spec = KNOWN.find((c) => c.id === id);
