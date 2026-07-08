@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { resolveCli } from "@/lib/clis";
+import { resolveCli, isClaudeFamily } from "@/lib/clis";
 import { careerOpsRoot, readMemory, doctorState } from "@/lib/career-ops";
 
 export const runtime = "nodejs"; // child_process (spawn) requires the Node runtime
@@ -89,7 +89,7 @@ export async function POST(req: Request) {
   // The chat CLI is READ-ONLY: all writes go through gated registry actions
   // (remember → /api/memory, setStatus → /api/status), never the CLI editing
   // files directly. Scope its tools so it can advise (read) but not blind-write.
-  const isClaude = cliId === "claude";
+  const isClaude = isClaudeFamily(cliId);
   // allowedTools must be COMMA-separated; disallowedTools is the hard guardrail
   // so the advisor can read (and WebFetch) but never blind-writes or shells out.
   const args = isClaude

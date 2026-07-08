@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import type { Page, Frame } from "playwright-core";
-import { resolveCli } from "@/lib/clis";
+import { resolveCli, isClaudeFamily } from "@/lib/clis";
 import { careerOpsRoot } from "@/lib/career-ops";
 import { dropNewTabs } from "./diagnose";
 import type { DriveStep } from "./issue";
@@ -116,7 +116,7 @@ export async function driveSession(
 ): Promise<DriveResult> {
   const resolved = resolveCli(cliId);
   const steps: DriveStep[] = [];
-  if (!resolved || cliId !== "claude") {
+  if (!resolved || !isClaudeFamily(cliId)) {
     return { reached: false, turns: 0, reason: "Agentic drive currently needs Claude Code (browser-driving CLI).", steps };
   }
   const shot = async () => {

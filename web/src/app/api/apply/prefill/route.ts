@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { resolveCli } from "@/lib/clis";
+import { resolveCli, isClaudeFamily } from "@/lib/clis";
 import { careerOpsRoot, readMemory } from "@/lib/career-ops";
 import { getSession } from "@/lib/apply/session";
 
@@ -144,7 +144,7 @@ Output ONLY a compact JSON object mapping each field id → {"value": "...", "ne
       log(`Form: "${s.title}" · ${s.fields.length} fields · prompt ${prompt.length} chars · memory ${mem.length} chars`);
       log(`Planner: ${cliId} (${binPath})`);
 
-      const isClaude = cliId === "claude";
+      const isClaude = isClaudeFamily(cliId || "");
       // --strict-mcp-config with no --mcp-config = load ZERO MCP servers → much
       // faster startup (skips the user's global playwright/gmail/linear/… servers
       // the planner doesn't need; it only reads local files).

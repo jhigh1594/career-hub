@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { resolveCli } from "@/lib/clis";
+import { resolveCli, isClaudeFamily } from "@/lib/clis";
 import { careerOpsRoot, readMemory } from "@/lib/career-ops";
 import { acquireTrackerWrite, releaseTrackerWrite } from "@/lib/core/run-registry";
 
@@ -130,7 +130,7 @@ export async function POST(req: Request) {
   const today = new Date().toISOString().slice(0, 10);
   const prompt = buildPrompt(kind, input, readMemory(), today);
 
-  const isClaude = cliId === "claude";
+  const isClaude = isClaudeFamily(cliId);
   // Tool scope by kind (comma-separated lists; disallowedTools is the hard
   // guardrail). 'evaluate' runs the REAL mode + persists canonical artifacts →
   // it needs Write + Bash (reserve-report-num / merge-tracker / write the

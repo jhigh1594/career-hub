@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import type { Frame } from "playwright-core";
-import { resolveCli } from "@/lib/clis";
+import { resolveCli, isClaudeFamily } from "@/lib/clis";
 import { careerOpsRoot } from "@/lib/career-ops";
 import type { ApplyField } from "./extract";
 
@@ -115,7 +115,7 @@ export async function agentInterpretForm(frame: Frame, cliId: string, title: str
   const cands = await captureCandidates(frame).catch(() => [] as Cand[]);
   if (!cands.length) return [];
 
-  const out = await runPlanner(resolved.binPath, cliId === "claude", resolved.spec.args, buildPrompt(title, cands));
+  const out = await runPlanner(resolved.binPath, isClaudeFamily(cliId), resolved.spec.args, buildPrompt(title, cands));
   const m = out.match(/\[[\s\S]*\]/);
   if (!m) return [];
   let parsed: Interpreted[];
