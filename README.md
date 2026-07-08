@@ -280,6 +280,7 @@ Career-ops uses a shared command router. In CLIs that register slash commands, i
 /career-ops scan           → Scan portals for new offers
 /career-ops pdf            → Generate ATS-optimized CV
 /career-ops cover          → Cover letter generator (paste JD or /career-ops cover {slug})
+/career-ops deck           → Case-study deck: multi-slide HTML → here.now live URL + PDF (/career-ops deck {report})
 /career-ops email          → Formal application email draft (draft-only; never sends, submits, or clicks)
 /career-ops batch          → Batch evaluate multiple offers
 /career-ops tracker        → View application status

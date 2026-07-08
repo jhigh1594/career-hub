@@ -131,6 +131,7 @@ You can invoke the command center or any of its modes directly within your CLI:
 * `pdf` — Generate ATS-optimized CV PDF
 * `latex` — Export CV as LaTeX/Overleaf .tex
 * `cover` — Generate cover letter
+* `deck` — Generate a multi-slide case-study deck (HTML → here.now URL + PDF), tailored per application
 * `email` — Draft formal application email only; never sends, submits, or clicks
 * `interview-prep` — Generate interview preparation guide
 * `interview` — Onboarding/on-demand interview
@@ -263,6 +264,7 @@ Default modes are in `modes/` (English). Language-specific modes live in `modes/
 | Asks to compare offers | `ofertas` |
 | Wants LinkedIn outreach | `contacto` |
 | Wants a formal application email | `email` — draft-only; never sends, submits, or clicks anything |
+| Wants a case-study / portfolio deck for an application | `deck` — multi-slide HTML → here.now URL + PDF; user-gated deploy, never auto-publishes |
 | Asks for company research | `deep` |
 | Preps for interview at specific company | `interview-prep` |
 | Wants interactive profile/CV onboarding | `interview` |
