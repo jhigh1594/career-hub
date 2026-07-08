@@ -2,7 +2,7 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { resolveCli } from "@/lib/clis";
+import { resolveCli, isClaudeFamily } from "@/lib/clis";
 import { careerOpsRoot } from "@/lib/career-ops";
 
 // Parse a CV (pasted text or an uploaded PDF) into clean cv.md markdown by running
@@ -77,7 +77,7 @@ export async function POST(req: Request) {
       if (!(file instanceof File)) return Response.json({ error: "no file" }, { status: 400 });
       // Reading a PDF/DOCX from a path needs the CLI's file tool, which only Claude
       // is granted here. Tell non-Claude users plainly instead of failing opaquely.
-      if (cliId !== "claude" && /\.(pdf|docx)$/i.test(file.name)) {
+      if (!isClaudeFamily(cliId) && /\.(pdf|docx)$/i.test(file.name)) {
         return Response.json({ error: "PDF upload needs Claude Code — paste your CV text instead." }, { status: 400 });
       }
       const ext = (file.name.match(/\.[a-z0-9]+$/i)?.[0] || ".pdf").toLowerCase();
@@ -99,7 +99,7 @@ export async function POST(req: Request) {
   }
   const { spec, binPath } = resolved;
   const prompt = ingestPrompt(promptSource);
-  const isClaude = cliId === "claude";
+  const isClaude = isClaudeFamily(cliId);
   const args = isClaude
     ? [
         "-p",

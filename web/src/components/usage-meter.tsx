@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Gauge } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { isClaudeFamily } from "@/lib/clis";
 
 type Usage = { window5h: { tokens: number }; window7d: { tokens: number } };
 
@@ -55,7 +56,7 @@ export function UsageMeter() {
   }, []);
 
   // The usage source is Claude's local logs; only meaningful when Claude is the CLI.
-  if (cli && cli !== "claude") return null;
+  if (cli && !isClaudeFamily(cli)) return null;
   if (!data) return null;
 
   const rows = [
