@@ -2,13 +2,14 @@ import Link from "next/link";
 import { ArrowLeft, FileText, ExternalLink, ChevronDown } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import type { Application } from "@/lib/career-ops";
+import { hasCaseStudies, type Application } from "@/lib/career-ops";
 import { Badge } from "@/components/ui/badge";
 import { scoreTone, scoreNum, legitimacyTone, parseReport } from "@/lib/format";
 import { StatusSelect } from "@/components/status-select";
 import { CompanyLogo } from "@/components/company-logo";
 import { ScoreMethodology } from "@/components/score-methodology";
 import { GeneratePdfButton } from "@/components/generate-pdf-button";
+import { GenerateDeckButton } from "@/components/generate-deck-button";
 import { ApplyButton } from "@/components/apply-button";
 import { DeleteFromTracker } from "@/components/delete-from-tracker";
 
@@ -123,6 +124,7 @@ export function ReportView({
           {meta?.legitimacy && <Badge tone={legitimacyTone(meta.legitimacy)}>{meta.legitimacy}</Badge>}
           {app && <StatusSelect n={id} current={app.status} />}
           <GeneratePdfButton n={id} company={app?.company ?? meta?.title ?? id} pdfReady={(app?.pdf ?? "").includes("✅")} />
+          <GenerateDeckButton n={id} company={app?.company ?? meta?.title ?? id} score={score ?? ""} hasCaseStudies={hasCaseStudies()} />
           <ApplyButton n={id} url={url && url.startsWith("http") ? url : undefined} company={app?.company ?? meta?.title ?? id} pdfReady={(app?.pdf ?? "").includes("✅")} />
         </div>
 

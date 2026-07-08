@@ -251,6 +251,17 @@ const ACTIONS: Record<string, ActionDef> = {
     },
   },
 
+  generateDeck: {
+    sideEffect: "spend",
+    run: (raw, ctx) => {
+      const n = String(raw.n ?? "").trim();
+      if (!n) return { status: "ignored", note: "need an application #" };
+      const app = ctx.applications.find((a) => a.n === n);
+      const id = ctx.startJob({ title: `Deck · ${app?.company ?? `#${n}`}`, subtitle: "case-study deck", kind: "deck", input: n, page: `/pipeline/${n}` });
+      return { status: "done", jobIds: id ? [id] : [] };
+    },
+  },
+
   setStatus: {
     sideEffect: "write",
     run: (raw, ctx) => {
