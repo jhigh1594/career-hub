@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Gauge } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { isClaudeFamily } from "@/lib/clis";
+import { isClaudeFamily } from "@/lib/cli-family";
 
 type Usage = { window5h: { tokens: number }; window7d: { tokens: number } };
 

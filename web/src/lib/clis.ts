@@ -91,8 +91,10 @@ export function detectClis() {
   });
 }
 
-/** claudeglm is Claude Code pre-routed to z.ai/GLM — same CLI shape, same flags. */
-export const isClaudeFamily = (id: string): boolean => id === "claude" || id === "claudeglm";
+// Re-exported from the node-free cli-family module so client components can
+// import isClaudeFamily without pulling clis.ts (node:fs/os/path) into the
+// client bundle. Server routes keep importing it from here unchanged.
+export { isClaudeFamily } from "./cli-family.ts";
 
 export function resolveCli(id: string): { spec: CliSpec; binPath: string } | null {
   const spec = KNOWN.find((c) => c.id === id);
