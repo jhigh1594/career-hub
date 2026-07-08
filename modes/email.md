@@ -24,6 +24,9 @@ Supported inputs:
    - If `data/pdf-index.tsv` contains a PDF for that report, mention it as the CV
      attachment candidate. If no PDF is indexed, say that the CV should be
      generated first via `/career-ops pdf {slug}` or attached manually.
+   - If the report header has a `**Deck:** {url}` line, mention the deck URL as a
+     companion link (and note if it is marked `*(anonymous, 24h)*` — those links
+     expire; recommend re-checking before sending).
 
 2. `/career-ops email {pasted JD}`
    - Use the pasted JD directly.

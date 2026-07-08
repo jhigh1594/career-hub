@@ -101,3 +101,7 @@ package-lock.json
 
 # Planning (local scratchpad)
 plan/
+
+# here.now publish state + credentials (skill writes .herenow/state.json to cwd
+# on publish; carries claimTokens. ~/.herenow/credentials is outside the repo.)
+.herenow/

@@ -38,6 +38,8 @@ Read `article-digest.md` if it exists — supplementary proof points and metrics
 
 Read `modes/_profile.md` if it exists — the candidate's personalization file. It captures their target roles, adaptive framing and archetypes, exit narrative, cross-cutting advantage, proof points, comp targets, negotiation scripts, location policy, and any voice or writing-style rules they have added. Its rules **govern the letter's voice and structure and override the generic defaults in this mode**, so the candidate's personalization is never lost.
 
+If the target report's header has a `**Deck:** {url}` line (a published `/career-ops deck` case-study deck), mention it as a companion link in the letter's closing or contact area.
+
 ---
 
 ## Step 2 — Parse the JD
