@@ -121,6 +121,20 @@ cover_letter:
       # Only trigger this entry when the JD location is in one of these countries.
       countries: [Spain, Mexico, Argentina, Colombia, Chile]
 
+# ── Deck ─────────────────────────────────────────────────────────────────────
+#
+# Used by `/career-ops deck` (multi-slide HTML case-study deck → here.now live
+# URL + PDF). Optional. Omit the whole block to keep defaults.
+#
+# deck:
+#   # Per-company accent color. MUST be a hex color (validated); non-color values
+#   # are rejected and the default is used. Used for slide theming.
+#   accent_color: "#0a7c5a"
+#   # Default accent when a company accent isn't supplied or fails validation.
+#   default_accent: "#1a1a2e"
+#   # Page format for the PDF render: "a4" or "letter".
+#   default_format: "a4"
+
 # ── Contact Preferences ──────────────────────────────────────────────────────
 #
 # Used by `/career-ops contacto` (outreach CTA) and `/career-ops email` (contact

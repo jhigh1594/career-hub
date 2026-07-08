@@ -13,7 +13,7 @@ The portfolio that goes with this system is also open source: [cv-santiago](http
 There are two layers. Read `DATA_CONTRACT.md` for the full list.
 
 **User Layer (NEVER auto-updated, personalization goes HERE):**
-- `cv.md`, `config/profile.yml`, `modes/_profile.md`, `article-digest.md`, `portals.yml`
+- `cv.md`, `config/profile.yml`, `modes/_profile.md`, `article-digest.md`, `case-studies.md`, `portals.yml`
 - `data/*`, `reports/*`, `output/*`, `interview-prep/*`
 
 **System Layer (auto-updatable, DON'T put user data here):**
@@ -28,6 +28,7 @@ User-facing content (CV, cover letters, application emails, form answers, recrui
 
 - `cv.md`
 - `article-digest.md`
+- `case-studies.md`
 - `config/profile.yml`
 - `modes/_profile.md`
 - `writing-samples/`

@@ -264,6 +264,7 @@ const USER_PATHS = [
   'voice-dna.md',
   'portals.yml',
   'article-digest.md',
+  'case-studies.md',
   'interview-prep/',
   'data/',
   'reports/',

@@ -13,7 +13,7 @@ The portfolio that goes with this system is also open source: [cv-santiago](http
 There are two layers. Read `DATA_CONTRACT.md` for the full list.
 
 **User Layer (NEVER auto-updated, personalization goes HERE):**
-- `cv.md`, `config/profile.yml`, `modes/_profile.md`, `modes/_custom.md`, `article-digest.md`, `portals.yml`
+- `cv.md`, `config/profile.yml`, `modes/_profile.md`, `modes/_custom.md`, `article-digest.md`, `case-studies.md`, `portals.yml`
 - `data/*`, `reports/*`, `output/*`, `interview-prep/*`
 
 **System Layer (auto-updatable, DON'T put user data here):**
@@ -31,6 +31,7 @@ User-facing content (CV, cover letters, application emails, form answers, recrui
 
 - `cv.md`
 - `article-digest.md`
+- `case-studies.md`
 - `config/profile.yml`
 - `modes/_profile.md`
 - `writing-samples/`
@@ -375,5 +376,23 @@ Write one TSV file per evaluation to `batch/tracker-additions/{num}-{company-slu
 **Source of truth (full descriptions + aliases):** `templates/states.yml`. The 8 canonical states (use exactly one): `Evaluated` · `Applied` · `Responded` · `Interview` · `Offer` · `Rejected` · `Discarded` · `SKIP`.
 
 **RULES:** no markdown bold (`**`), no dates (those go in the date column), no extra text (use the notes column) in the status field.
+
+## Development
+
+### Commands
+- Test suite: `node test-all.mjs --quick` (browser-free; `--quick` skips Go dashboard build). CI also runs `cd dashboard && go test ./...`.
+- Standalone module tests: `node <name>.test.mjs` (self-contained, sit beside their source — not registered in `test-all.mjs`).
+- Verify pipeline integrity: `npm run verify` → `normalize` → `dedup` → `merge`.
+- Scan: `npm run scan` (zero-token ATS APIs) or `npm run scan:full`.
+- Update system files: `npm run update:check` → `update` / `rollback`.
+- Dashboard: `npm run serve:dashboard` (Go 1.26).
+
+### Architecture
+- `ARCHITECTURE.md` is the big-picture reference — read it. `DATA_CONTRACT.md` is the system/user file-boundary source of truth.
+- Flat root is deliberate (#1386): one script = one job, path stability is a feature. Don't reorganize.
+- Every `.mjs` script must be registered in `SYSTEM_PATHS` (enforced in CI by `validate-system-paths-coverage.mjs`).
+- Files are canonical; SQLite/derived stores are indexes only (#918).
+- Modes (`modes/*.md`) are the AI "brain"; `_shared.md` = scoring core. `providers/` = per-board scan modules.
+
 @AGENTS.md
 <!-- Add anything Claude Code specific that other agents don't need -->
