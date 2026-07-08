@@ -35,6 +35,19 @@ Do not submit anything anywhere.
 
 End with EXACTLY one final line: VERDICT: {5 if the PDF was written, else 1}/5 — {the output/ path, ≤12 words}`;
   }
+  if (kind === "deck") {
+    return `You are generating a case-study deck for application #${input}, headless, on the user's machine. Run the REAL career-ops "deck" mode — follow modes/deck.md EXACTLY (do not improvise a format).
+1. Read modes/deck.md, config/profile.yml (candidate.* + deck.accent_color / deck.default_format), cv.md, case-studies.md, and the evaluation report at reports/${input}-*.md (company, role, JD, fit blocks). Use WebFetch to read the JD from the report's URL if needed.
+2. Select 1–3 case studies from case-studies.md by TAG FIT to the role's top 3–4 required competencies (honor the mode's selection logic). DO NOT wait for confirmation — auto-select the best fit (3 optimal). Include the POV slide for senior-targeting roles; omit for IC/mid-level.
+3. Mirror the JD's vocabulary in the hook + each study's headlines (reframe ONLY — never invent a metric, project, tool, or role the user did not do).
+4. Run the Step 5 anti-slop gate on every metric/role/outcome: anything not traceable to case-studies.md, cv.md, or article-digest.md is DROPPED (render the slide without it — the template omits empty slots; never fill with a guess). State what was dropped and why in your output.
+5. Build the payload per modes/deck.md schema, write it to /tmp/deck-payload-${today}.json, then run: \`node generate-deck.mjs --payload /tmp/deck-payload-${today}.json --report ${input}\`. This writes output/deck-{slug}/index.html + a PDF sibling.
+6. DEPLOY (the user pre-approved by clicking Generate). Publish the generated output/deck-{slug}/ directory via the here-now skill: run the publish script at ~/.claude/skills/here-now/scripts/publish.sh against that directory. If ~/.herenow/credentials is absent, proceed with anonymous deploy (24h) and set auth_mode=anonymous; else auth_mode=permanent. Capture the live URL. If publish fails entirely, keep the local HTML+PDF and set deck_url empty — a deploy failure is NOT a total failure.
+7. Append ONE row (TAB-separated, real \\t) to data/deck-index.tsv: report\tdeck_url\tauth_mode\thtml\tpdf\tdate  (date=${today}; html/pdf = the local output paths).
+Do not submit an application or contact anyone.
+
+End with EXACTLY one final line: VERDICT: {5 if the deck HTML+PDF were written, else 1}/5 — {the live deck_url or the output/ path, ≤12 words}`;
+  }
   if (kind === "fix-portal") {
     return `A company's job-portal ATS slug is BROKEN — career-ops can no longer scan it, so it silently disappears from every future scan. Repair it (headless, on the user's machine):
 1. Run \`node verify-portals.mjs --add "${input}"\` — it probes Greenhouse/Ashby/Lever for the company's correct ATS slug and prints the suggested ats + slug.
@@ -86,7 +99,7 @@ export async function POST(req: Request) {
 
   // These run the REAL core (modes/scripts), not just data — fail clearly if the
   // root is incomplete instead of faking it.
-  const needsScript: Record<string, string> = { evaluate: "modes/oferta.md", "fix-portal": "verify-portals.mjs", pdf: "generate-pdf.mjs" };
+  const needsScript: Record<string, string> = { evaluate: "modes/oferta.md", "fix-portal": "verify-portals.mjs", pdf: "generate-pdf.mjs", deck: "generate-deck.mjs" };
   const required = needsScript[kind];
   if (required && !fs.existsSync(path.join(careerOpsRoot(), required))) {
     return new Response(
@@ -99,9 +112,17 @@ export async function POST(req: Request) {
 
   // An A–F score is meaningless without a CV to score against — the CLI would
   // hallucinate a fit narrative and still emit a VERDICT. Require cv.md first.
-  if ((kind === "evaluate" || kind === "pdf") && !fs.existsSync(path.join(careerOpsRoot(), "cv.md"))) {
+  if ((kind === "evaluate" || kind === "pdf" || kind === "deck") && !fs.existsSync(path.join(careerOpsRoot(), "cv.md"))) {
     return new Response(
       JSON.stringify({ error: "Add your CV first so I can score this against you — drop it on the home page." }),
+      { status: 400, headers: { "Content-Type": "application/json" } },
+    );
+  }
+  // A deck renders FROM case-studies.md — it is the mode's primary source and the
+  // thing that makes a deck worth building. No case studies → no deck.
+  if (kind === "deck" && !fs.existsSync(path.join(careerOpsRoot(), "case-studies.md"))) {
+    return new Response(
+      JSON.stringify({ error: "Add case studies first — decks are built from case-studies.md (run /career-ops deck in the CLI to capture them)." }),
       { status: 400, headers: { "Content-Type": "application/json" } },
     );
   }
@@ -116,7 +137,7 @@ export async function POST(req: Request) {
   // report). 'research' stays read-only. Task (sub-agents) is always blocked
   // (runaway cost). NEVER auto-submits — that is a prompt-level guarantee.
   const tools =
-    kind === "evaluate" || kind === "fix-portal" || kind === "pdf"
+    kind === "evaluate" || kind === "fix-portal" || kind === "pdf" || kind === "deck"
       ? { allowed: "Read,WebFetch,WebSearch,Write,Edit,Bash,Glob,Grep", disallowed: "Task,NotebookEdit" }
       : { allowed: "Read,WebFetch,WebSearch,Glob,Grep", disallowed: "Bash,Write,Edit,NotebookEdit,Task" };
   const args = isClaude
@@ -157,8 +178,9 @@ export async function POST(req: Request) {
       let sawError = false;
       let lastTokens = 0; // per-run token cost from the Claude result event (#6) — local only
       let lastCostUsd: number | null = null;
-      // pdf-mode tailors a full CV + renders it — give it more headroom.
-      const killMs = kind === "pdf" ? 720_000 : 285_000;
+      // pdf-mode tailors a full CV + renders it; deck generates slides + renders +
+      // deploys — both need more headroom than an evaluation.
+      const killMs = kind === "pdf" || kind === "deck" ? 720_000 : 285_000;
       killer = setTimeout(() => {
         try { child.kill("SIGTERM"); } catch { /* ignore */ }
       }, killMs);

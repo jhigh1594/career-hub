@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { atomicWrite } from "@/lib/core/safe-write";
+// Plain .mjs (no fs/alias) so the parser is testable with `node --test`.
+import { parseDeckIndex } from "./deck-index.mjs";
 
 /**
  * Resolve the career-ops "home" — the directory holding the user's sibling
@@ -228,6 +230,82 @@ export function readReport(n: string): ReportData | null {
 
 export function findApplication(n: string): Application | null {
   return readApplications().find((a) => a.n === n) ?? null;
+}
+
+export type DeckRow = {
+  report: string;
+  deckUrl: string;
+  authMode: string;
+  html: string;
+  pdf: string;
+  date: string;
+};
+
+/**
+ * Parse data/deck-index.tsv — the per-application deck ledger the deck mode
+ * appends after a generate+deploy (columns: report, deck_url, auth_mode, html,
+ * pdf, date). Tolerant like the other readers: no file → empty, malformed row
+ * skipped, never thrown. This is the UI's source of truth for "does a deck
+ * exist for this report, and where does it live".
+ */
+export function readDeckIndex(): DeckRow[] {
+  const tsv = read("data/deck-index.tsv");
+  return parseDeckIndex(tsv ?? "");
+}
+
+export function findDeckRow(n: string): DeckRow | null {
+  return readDeckIndex().find((r) => r.report === n) ?? null;
+}
+
+/** The deck mode names artifacts output/deck-{slug}/index.html + .pdf, where
+ *  slug = deck-${slugify(company)} — mirrors generate-deck.mjs's slugify exactly
+ *  so the serve routes derive the same path the generator wrote. */
+export function deckSlug(company: string): string {
+  const s = company.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
+  return `deck-${s || "company"}`;
+}
+
+/**
+ * Resolve a deck-index row's html/pdf path to an absolute file ONLY if it lands
+ * inside careerOpsRoot()/output. The deck-index is LLM-authored at runtime (the
+ * headless worker appends a TSV row from streamed model output), so its paths
+ * are NOT a trusted source — an absolute path or a `../` escape must never let
+ * the serve endpoint read arbitrary files. Returns null when the path escapes.
+ */
+function safeOutputPath(relOrAbs: string): string | null {
+  const root = careerOpsRoot();
+  const out = path.resolve(root, "output");
+  const candidate = path.isAbsolute(relOrAbs) ? relOrAbs : path.join(root, relOrAbs);
+  const norm = path.resolve(candidate);
+  return norm === out || norm.startsWith(out + path.sep) ? norm : null;
+}
+
+/** Resolve the deck PDF (or local HTML) for a report to an absolute file, or
+ *  null. Primary: the deck-index row's path, IF it is contained under output/.
+ *  Fallback: derive deck-{company-slug} from the tracker (matches the generator
+ *  exactly). Never trusts an out-of-tree path. */
+export function resolveDeckArtifact(report: string, kind: "pdf" | "html"): string | null {
+  const row = findDeckRow(report);
+  const rowPath = kind === "pdf" ? row?.pdf : row?.html;
+  if (rowPath) {
+    const safe = safeOutputPath(rowPath);
+    if (safe && fs.existsSync(safe)) return safe;
+  }
+  const app = findApplication(report);
+  if (!app?.company) return null;
+  const out = path.join(careerOpsRoot(), "output");
+  const file = kind === "pdf" ? path.join(out, `${deckSlug(app.company)}.pdf`) : path.join(out, deckSlug(app.company), "index.html");
+  return fs.existsSync(file) ? file : null;
+}
+
+/** case-studies.md is the deck mode's primary source — its presence gates the
+ *  Generate button the way cv.md gates CV/eval modes. */
+export function hasCaseStudies(): boolean {
+  try {
+    return fs.existsSync(path.join(careerOpsRoot(), "case-studies.md"));
+  } catch {
+    return false;
+  }
 }
 
 /** The CANONICAL user-customization file the CLI/TUI reads. Durable facts the
