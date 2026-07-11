@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { resolveCli, isClaudeFamily } from "@/lib/clis";
+import { isFatalStderr } from "@/lib/run/stderr";
 import { careerOpsRoot, readMemory } from "@/lib/career-ops";
 import { acquireTrackerWrite, releaseTrackerWrite } from "@/lib/core/run-registry";
 
@@ -238,8 +239,10 @@ export async function POST(req: Request) {
       child.stderr.on("data", (d: Buffer) => {
         const s = d.toString();
         // Widened: auth/login/quota failures are the most common real error and
-        // the old narrow regex missed them (silent false "success").
-        if (/error|denied|fatal|not found|unauthorized|forbidden|auth|login|credential|api[ -]?key|quota|rate limit|not authenticated/i.test(s)) {
+        // the old narrow regex missed them (silent false "success"). The
+        // connectors-notice false-positive (benign line containing "auth"/
+        // "login") is excluded in isFatalStderr — see src/lib/run/stderr.ts.
+        if (isFatalStderr(s)) {
           sawError = true;
           send({ type: "error", msg: s.trim().slice(0, 200) });
         }
